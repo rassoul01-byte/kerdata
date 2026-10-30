@@ -1,0 +1,56 @@
+source,champ,type_attendu,type_reel,ecart,action,n,n_vides,n_propres,n_convertibles,n_non_convertibles,n_hors_regle
+agence,id,text,texte,640 modalités brutes -> 640 après casse/espaces,type confirmé,640,0,,,,
+agence,date,date,texte mixte,298 à convertir (réparable),convertir (réparable),640,0,342.0,298.0,0.0,
+agence,transaction,catégorie,absent,colonne non fournie par la source,à traiter en comp 3 (champ absent),640,640,,,,
+agence,categorie,catégorie,texte,7 modalités brutes -> 7 après casse/espaces,type confirmé,640,0,,,,
+agence,region,catégorie,texte,14 modalités brutes -> 14 après casse/espaces,type confirmé,640,0,,,,
+agence,ville,catégorie,texte,57 modalités brutes -> 46 après casse/espaces,normaliser/traiter en comp 3,640,0,,,,
+agence,prix,numérique ou texte,numérique,5 valeurs <= 0,convertir + traiter le reste en comp 3,640,0,640.0,0.0,0.0,5.0
+agence,surface,numérique ou texte,numérique,4 valeurs <= 0,convertir + traiter le reste en comp 3,640,0,640.0,0.0,0.0,4.0
+agence,chambres,entier (hors dictionnaire),numérique,aucun,type confirmé,640,0,640.0,0.0,0.0,
+agence,sdb,entier (hors dictionnaire),numérique,aucun,type confirmé,640,0,640.0,0.0,0.0,
+agence,statut,catégorie,texte,4 modalités brutes -> 4 après casse/espaces,type confirmé,640,0,,,,
+historique,id,text,texte,528 modalités brutes -> 528 après casse/espaces,type confirmé,528,0,,,,
+historique,date,date,texte mixte,215 à convertir (réparable),convertir (réparable),528,0,313.0,215.0,0.0,
+historique,transaction,catégorie,absent,colonne non fournie par la source,à traiter en comp 3 (champ absent),528,528,,,,
+historique,categorie,catégorie,texte,14 modalités brutes -> 7 après casse/espaces,normaliser/traiter en comp 3,528,0,,,,
+historique,region,catégorie,texte,14 modalités brutes -> 14 après casse/espaces,type confirmé,528,0,,,,
+historique,ville,catégorie,texte,46 modalités brutes -> 46 après casse/espaces; 8 vides,normaliser/traiter en comp 3,528,8,,,,
+historique,prix,numérique ou texte,texte mixte,72 à convertir (réparable); 10 non convertibles (structurel),convertir + traiter le reste en comp 3,528,0,446.0,72.0,10.0,0.0
+historique,surface,numérique ou texte,texte mixte,50 à convertir (réparable),convertir (réparable),528,0,478.0,50.0,0.0,0.0
+historique,chambres,entier (hors dictionnaire),numérique,aucun,type confirmé,528,0,528.0,0.0,0.0,
+historique,sdb,entier (hors dictionnaire),numérique,aucun,type confirmé,528,0,528.0,0.0,0.0,
+historique,statut,catégorie,absent,colonne non fournie par la source,à traiter en comp 3 (champ absent),528,528,,,,
+notaires,id,text,texte,410 modalités brutes -> 410 après casse/espaces,type confirmé,410,0,,,,
+notaires,date,date,texte mixte,6 non convertibles (structurel),convertir + traiter le reste en comp 3,410,0,404.0,0.0,6.0,
+notaires,transaction,catégorie,absent,colonne non fournie par la source,à traiter en comp 3 (champ absent),410,410,,,,
+notaires,categorie,catégorie,texte,7 modalités brutes -> 7 après casse/espaces,type confirmé,410,0,,,,
+notaires,region,catégorie,texte,14 modalités brutes -> 14 après casse/espaces,type confirmé,410,0,,,,
+notaires,ville,catégorie,texte,46 modalités brutes -> 46 après casse/espaces,type confirmé,410,0,,,,
+notaires,prix,numérique ou texte,numérique,14 vides,convertir + traiter le reste en comp 3,410,14,396.0,0.0,0.0,0.0
+notaires,surface,numérique ou texte,numérique,aucun,type confirmé,410,0,410.0,0.0,0.0,0.0
+notaires,chambres,entier (hors dictionnaire),numérique,aucun,type confirmé,410,0,410.0,0.0,0.0,
+notaires,sdb,entier (hors dictionnaire),absent,colonne non fournie par la source,à traiter en comp 3 (champ absent),410,410,,,,
+notaires,statut,catégorie,texte,4 modalités brutes -> 3 après casse/espaces,normaliser/traiter en comp 3,410,0,,,,
+particuliers,id,text,texte,731 modalités brutes -> 731 après casse/espaces,type confirmé,731,0,,,,
+particuliers,date,date,texte mixte,446 à convertir (réparable),convertir (réparable),731,0,285.0,446.0,0.0,
+particuliers,transaction,catégorie,texte,2 modalités brutes -> 2 après casse/espaces,type confirmé,731,0,,,,
+particuliers,categorie,catégorie,texte,7 modalités brutes -> 7 après casse/espaces,type confirmé,731,0,,,,
+particuliers,region,catégorie,texte,14 modalités brutes -> 14 après casse/espaces,type confirmé,731,0,,,,
+particuliers,ville,catégorie,texte,46 modalités brutes -> 46 après casse/espaces,type confirmé,731,0,,,,
+particuliers,prix,numérique ou texte,texte mixte,5 à convertir (réparable); 2 non convertibles (structurel); 61 vides,convertir + traiter le reste en comp 3,731,61,663.0,5.0,2.0,0.0
+particuliers,surface,numérique ou texte,texte mixte,4 non convertibles (structurel); 75 vides,convertir + traiter le reste en comp 3,731,75,652.0,0.0,4.0,0.0
+particuliers,chambres,entier (hors dictionnaire),numérique,aucun,type confirmé,731,0,731.0,0.0,0.0,
+particuliers,sdb,entier (hors dictionnaire),numérique,aucun,type confirmé,731,0,731.0,0.0,0.0,
+particuliers,statut,catégorie,texte,5 modalités brutes -> 5 après casse/espaces,type confirmé,731,0,,,,
+plateforme,id,text,texte,860 modalités brutes -> 860 après casse/espaces,type confirmé,875,0,,,,
+plateforme,date,date,numérique,aucun,type confirmé,875,0,875.0,0.0,0.0,
+plateforme,transaction,catégorie,texte,2 modalités brutes -> 2 après casse/espaces,type confirmé,875,0,,,,
+plateforme,categorie,catégorie,texte,8 modalités brutes -> 8 après casse/espaces,type confirmé,875,0,,,,
+plateforme,region,catégorie,texte,14 modalités brutes -> 14 après casse/espaces,type confirmé,875,0,,,,
+plateforme,ville,catégorie,texte,46 modalités brutes -> 46 après casse/espaces,type confirmé,875,0,,,,
+plateforme,prix,numérique ou texte,texte mixte,65 à convertir (réparable); 6 non convertibles (structurel),convertir + traiter le reste en comp 3,875,0,804.0,65.0,6.0,0.0
+plateforme,surface,numérique ou texte,texte mixte,29 à convertir (réparable); 5 vides,convertir + traiter le reste en comp 3,875,5,841.0,29.0,0.0,0.0
+plateforme,chambres,entier (hors dictionnaire),absent,colonne non fournie par la source,à traiter en comp 3 (champ absent),875,875,,,,
+plateforme,sdb,entier (hors dictionnaire),numérique,aucun,type confirmé,875,0,875.0,0.0,0.0,
+plateforme,statut,catégorie,texte,6 modalités brutes -> 6 après casse/espaces,type confirmé,875,0,,,,
