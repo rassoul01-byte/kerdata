@@ -3,8 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from immoanalyse.concat import VOLUMES_FICHE, concatener, controle_volumes
-from immoanalyse.readers import (COLONNES_COMMUNES, SOURCES, read_plateforme,
+from kerdata.concat import VOLUMES_FICHE, concatener, controle_volumes
+from kerdata.readers import (COLONNES_COMMUNES, SOURCES, read_plateforme,
                                  read_source)
 
 SRC = Path(__file__).resolve().parent.parent / "sources"

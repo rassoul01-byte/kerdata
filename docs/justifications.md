@@ -1,4 +1,4 @@
-# Registre des décisions — ImmoAnalyse (Module 2)
+# Registre des décisions — KerData (Module 2)
 
 Règle : chaque décision = une preuve chiffrée, notée au moment où elle est prise.
 

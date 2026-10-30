@@ -1,6 +1,6 @@
-# ImmoAnalyse — Module 2 : préparation des données
+# KerData — Module 2 : préparation des données
 
-Pipeline de préparation de 5 sources immobilières (données synthétiques, Sénégal).
+KerData : pipeline de préparation de 5 sources immobilières (données synthétiques, Sénégal).
 Les dossiers `sources/` et `referentiels/` sont en lecture seule : ne jamais les modifier.
 
 ## Arborescence

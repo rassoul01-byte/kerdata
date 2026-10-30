@@ -1,4 +1,4 @@
-"""Lecteurs des 5 sources brutes ImmoAnalyse.
+"""Lecteurs des 5 sources brutes KerData.
 
 Principe (étape 0) : LECTURE FIDÈLE. Aucune correction de valeur ici.
 - toutes les valeurs sont lues comme du texte (pas d'inférence de type),
