@@ -1,0 +1,5 @@
+segment,variable,n_total,n_echantillon,W,p_value,normal_a_5pct
+vente,prix,2608,500,0.7606,0.0,False
+vente,log(prix),2608,500,0.9901,0.0019,False
+location,prix,478,478,0.8782,0.0,False
+location,log(prix),478,478,0.9836,0.0,False

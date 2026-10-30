@@ -1,0 +1,74 @@
+champ,modalite,effectif_global,portee,sources
+categorie,appart,5,global,{'plateforme': 5}
+categorie,Local commercial,128,rare dans agence (9),{'agence': 9}
+categorie,Local commercial,128,rare dans notaires (5),{'notaires': 5}
+ville,Mback�,8,global,{'historique': 8}
+ville,Thi�s,7,global,{'historique': 7}
+ville,Gu�diawaye,7,global,{'historique': 7}
+ville,KÉDOUGOU,2,global,{'agence': 2}
+ville,ZIGUINCHOR,1,global,{'agence': 1}
+ville,touba,1,global,{'agence': 1}
+ville,KEUR MASSAR,1,global,{'agence': 1}
+ville,joal-fadiouth,1,global,{'agence': 1}
+ville,ziguinchor,1,global,{'agence': 1}
+ville,KOUNGHEUL,1,global,{'agence': 1}
+ville,bakel,1,global,{'agence': 1}
+ville,GOSSAS,1,global,{'agence': 1}
+ville,diourbel,1,global,{'agence': 1}
+ville,JOAL-FADIOUTH,1,global,{'agence': 1}
+ville,Birkelane,53,rare dans agence (8),{'agence': 8}
+ville,Diourbel,50,rare dans agence (6),{'agence': 6}
+ville,Guédiawaye,41,rare dans agence (9),{'agence': 9}
+ville,Joal-Fadiouth,51,rare dans agence (8),{'agence': 8}
+ville,Keur Massar,34,rare dans agence (7),{'agence': 7}
+ville,Mbour,58,rare dans agence (5),{'agence': 5}
+ville,Pikine,55,rare dans agence (8),{'agence': 8}
+ville,Touba,55,rare dans agence (8),{'agence': 8}
+ville,Bambey,76,rare dans historique (9),{'historique': 9}
+ville,Birkelane,53,rare dans historique (9),{'historique': 9}
+ville,Dakar,56,rare dans historique (2),{'historique': 2}
+ville,Diourbel,50,rare dans historique (8),{'historique': 8}
+ville,Joal-Fadiouth,51,rare dans historique (9),{'historique': 9}
+ville,Keur Massar,34,rare dans historique (8),{'historique': 8}
+ville,Louga,56,rare dans historique (9),{'historique': 9}
+ville,Oussouye,69,rare dans historique (8),{'historique': 8}
+ville,Pikine,55,rare dans historique (5),{'historique': 5}
+ville,Podor,71,rare dans historique (9),{'historique': 9}
+ville,Rufisque,62,rare dans historique (7),{'historique': 7}
+ville,Saraya,65,rare dans historique (8),{'historique': 8}
+ville,Tivaouane,56,rare dans historique (9),{'historique': 9}
+ville,Touba,55,rare dans historique (5),{'historique': 5}
+ville,Bakel,64,rare dans notaires (9),{'notaires': 9}
+ville,Bambey,76,rare dans notaires (4),{'notaires': 4}
+ville,Bignona,83,rare dans notaires (9),{'notaires': 9}
+ville,Dakar,56,rare dans notaires (9),{'notaires': 9}
+ville,Diourbel,50,rare dans notaires (5),{'notaires': 5}
+ville,Fatick,66,rare dans notaires (5),{'notaires': 5}
+ville,Goudiry,69,rare dans notaires (5),{'notaires': 5}
+ville,Goudomp,80,rare dans notaires (6),{'notaires': 6}
+ville,Guédiawaye,41,rare dans notaires (6),{'notaires': 6}
+ville,Joal-Fadiouth,51,rare dans notaires (5),{'notaires': 5}
+ville,Kaffrine,83,rare dans notaires (8),{'notaires': 8}
+ville,Kaolack,66,rare dans notaires (9),{'notaires': 9}
+ville,Keur Massar,34,rare dans notaires (2),{'notaires': 2}
+ville,Koungheul,86,rare dans notaires (9),{'notaires': 9}
+ville,Louga,56,rare dans notaires (9),{'notaires': 9}
+ville,Matam,70,rare dans notaires (5),{'notaires': 5}
+ville,Mbacké,60,rare dans notaires (6),{'notaires': 6}
+ville,Mbour,58,rare dans notaires (8),{'notaires': 8}
+ville,Médina Yoro Foulah,70,rare dans notaires (6),{'notaires': 6}
+ville,Ourossogui,84,rare dans notaires (8),{'notaires': 8}
+ville,Oussouye,69,rare dans notaires (9),{'notaires': 9}
+ville,Podor,71,rare dans notaires (9),{'notaires': 9}
+ville,Rufisque,62,rare dans notaires (7),{'notaires': 7}
+ville,Saint-Louis,71,rare dans notaires (6),{'notaires': 6}
+ville,Salémata,61,rare dans notaires (9),{'notaires': 9}
+ville,Saraya,65,rare dans notaires (7),{'notaires': 7}
+ville,Sédhiou,60,rare dans notaires (7),{'notaires': 7}
+ville,Tambacounda,64,rare dans notaires (7),{'notaires': 7}
+ville,Thiès,47,rare dans notaires (2),{'notaires': 2}
+ville,Goudomp,80,rare dans particuliers (9),{'particuliers': 9}
+ville,Kaolack-Fatick,71,rare dans particuliers (7),{'particuliers': 7}
+ville,Keur Massar,34,rare dans particuliers (6),{'particuliers': 6}
+ville,Louga,56,rare dans plateforme (9),{'plateforme': 9}
+statut,VENDU,4,global,{'notaires': 4}
