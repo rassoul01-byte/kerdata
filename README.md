@@ -5,7 +5,7 @@ Les dossiers `sources/` et `referentiels/` sont en lecture seule : ne jamais les
 
 ## Arborescence
 - `sources/`, `referentiels/` : entrées brutes (intouchables)
-- `src/immoanalyse/` : code du pipeline
+- `src/kerdata/` : code du pipeline
 - `tests/` : tests unitaires
 - `sortie/` : donnees_propres, quarantine, avertissements, rapport_qualite
 - `notebooks/`, `models/`, `reports/`, `docs/`
