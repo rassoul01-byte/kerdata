@@ -364,3 +364,91 @@ def main_d6(racine: Path = Path(".")) -> dict:
     figure_tendance(t, rep / "figures")
     out["t"] = t
     return out
+
+
+# ---------------------------------------------------------------------------
+# D7 : tests croisés ; Bloc F : aberrants et cohérence géographique (diagnostic seulement)
+# ---------------------------------------------------------------------------
+import re as _re  # noqa: E402
+import unicodedata as _ud  # noqa: E402
+
+RACINE_PKG = Path(__file__).resolve().parents[2]
+FFFD = "\ufffd"
+
+
+def _cle(s: str) -> str:
+    return _ud.normalize("NFKD", s.strip().lower()).encode("ascii", "ignore").decode()
+
+
+def tests_croises(d: pd.DataFrame, v: pd.DataFrame) -> pd.DataFrame:
+    """D7 : ANOVA/Kruskal log(prix) ~ catégorie (ventes) ; khi2 + V de Cramér catégorie × région."""
+    lignes = []
+    v = v.assign(cat=v.categorie_cle.replace({"appart": "appartement"}))
+    groupes = [np.log(g.prix_num).to_numpy() for _, g in v.groupby("cat")]
+    f, p = st.f_oneway(*groupes)
+    tout = np.log(v.prix_num); ssb = sum(len(g) * (g.mean() - tout.mean()) ** 2 for g in groupes)
+    lignes.append(dict(test="ANOVA log(prix) ~ catégorie (ventes)", n=len(v), statistique=f, p_value=p,
+                       effet=ssb / ((tout - tout.mean()) ** 2).sum(), mesure_effet="eta²"))
+    h, p = st.kruskal(*groupes)
+    lignes.append(dict(test="Kruskal-Wallis log(prix) ~ catégorie (ventes)", n=len(v), statistique=h, p_value=p,
+                       effet=np.nan, mesure_effet=""))
+    x = d[(d.categorie != "") & (d.region != "") & ~d.region.str.contains(FFFD)].copy()
+    x["cat"] = x.categorie_cle.replace({"appart": "appartement"}); x["reg"] = x.region.map(_cle)
+    ct = pd.crosstab(x.cat, x.reg)
+    chi2, p, ddl, _ = st.chi2_contingency(ct)
+    lignes.append(dict(test=f"khi2 catégorie × région (ddl={ddl}, hors mojibake)", n=len(x), statistique=chi2, p_value=p,
+                       effet=np.sqrt(chi2 / (len(x) * (min(ct.shape) - 1))), mesure_effet="V de Cramér"))
+    return pd.DataFrame(lignes).round(6)
+
+
+def aberrants_diagnostic(d: pd.DataFrame) -> pd.DataFrame:
+    """Bloc F : prix/surface hors fourchettes du référentiel, valeurs impossibles — AUCUNE décision."""
+    ref = pd.read_csv(RACINE_PKG / "referentiels" / "referentiel_categories.csv")
+    ref["cle"] = ref.categorie.str.lower()
+    v = d.assign(cat=d.categorie_cle.replace({"appart": "appartement"})).merge(ref, left_on="cat", right_on="cle", how="left")
+    ventes = v[(v.segment == "vente") & (v.prix_num > 0)]
+    lignes = []
+    for c, g in ventes.groupby("cat"):
+        s = g[g.surface_num > 0]
+        lignes.append(dict(
+            categorie=c, n_ventes=len(g),
+            prix_sous_min=int((g.prix_num < g.prix_min_indicatif).sum()), prix_au_dessus_max=int((g.prix_num > g.prix_max_indicatif).sum()),
+            pct_prix_hors_fourchette=round(100 * ((g.prix_num < g.prix_min_indicatif) | (g.prix_num > g.prix_max_indicatif)).mean(), 1),
+            surface_sous_min=int((s.surface_num < s.surface_min_typique).sum()), surface_au_dessus_max=int((s.surface_num > s.surface_max_typique).sum()),
+            pct_surface_hors_typique=round(100 * ((s.surface_num < s.surface_min_typique) | (s.surface_num > s.surface_max_typique)).mean(), 1)))
+    out = pd.DataFrame(lignes)
+    return out
+
+
+def coherence_geographique(d: pd.DataFrame) -> pd.DataFrame:
+    """Bloc F : (région, ville) vs référentiel géographique + récupérabilité des noms à accents cassés."""
+    g = pd.read_csv(RACINE_PKG / "referentiels" / "referentiel_geographique.csv")
+    paires = set(zip(g.region.map(_cle), g.ville.map(_cle)))
+    noms = {"region": sorted(set(g.region)), "ville": sorted(set(g.ville))}
+    lignes = []
+    x = d[(d.region != "") & (d.ville != "")]
+    casse = x.region.str.contains(FFFD) | x.ville.str.contains(FFFD)
+    ok = pd.Series([(_cle(r), _cle(v_)) in paires for r, v_ in zip(x.region, x.ville)], index=x.index)
+    lignes.append(dict(mesure="lignes avec région et ville", valeur=len(x), detail=""))
+    lignes.append(dict(mesure="lignes avec accents cassés (�)", valeur=int(casse.sum()), detail=str(x[casse].source.value_counts().to_dict())))
+    lignes.append(dict(mesure="paires région/ville valides hors mojibake", valeur=int(ok[~casse].sum()), detail=f"sur {int((~casse).sum())}"))
+    inc = x[~casse & ~ok]
+    lignes.append(dict(mesure="paires incohérentes hors mojibake", valeur=len(inc),
+                       detail=str(inc.groupby(["source", "region", "ville"]).size().to_dict())))
+    lignes.append(dict(mesure="villes vides", valeur=int((d.ville == "").sum()), detail=str(d[d.ville == ""].source.value_counts().to_dict())))
+    for champ in ("region", "ville"):
+        formes = sorted(set(d.loc[d[champ].str.contains(FFFD), champ]))
+        res = {f: [n for n in noms[champ] if _re.fullmatch(_re.escape(f.strip()).replace(FFFD, "."), n, flags=_re.I)] for f in formes}
+        unique = {f: c[0] for f, c in res.items() if len(c) == 1}
+        lignes.append(dict(mesure=f"{champ} : formes cassées récupérables sans ambiguïté", valeur=len(unique),
+                           detail=f"sur {len(formes)} formes ; ambiguës/sans match : {len(formes) - len(unique)}"))
+    return pd.DataFrame(lignes)
+
+
+def main_d7_f(racine: Path = Path(".")) -> dict:
+    d = preparer(charger_corpus(racine)); v = base_ventes(d); rep = racine / "reports"
+    out = dict(croises=tests_croises(d, v), aberrants=aberrants_diagnostic(d), geo=coherence_geographique(d))
+    out["croises"].to_csv(rep / "comp2_d7_tests_croises.csv", index=False)
+    out["aberrants"].to_csv(rep / "comp2_f_aberrants_vs_referentiel.csv", index=False)
+    out["geo"].to_csv(rep / "comp2_f_coherence_geographique.csv", index=False)
+    return out

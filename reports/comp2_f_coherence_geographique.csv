@@ -1,0 +1,8 @@
+mesure,valeur,detail
+lignes avec région et ville,3176,
+lignes avec accents cassés (�),208,{'historique': 208}
+paires région/ville valides hors mojibake,2964,sur 2968
+paires incohérentes hors mojibake,4,"{('particuliers', 'Ziguinchor', 'Dakar'): 4}"
+villes vides,8,{'historique': 8}
+region : formes cassées récupérables sans ambiguïté,3,sur 3 formes ; ambiguës/sans match : 0
+ville : formes cassées récupérables sans ambiguïté,11,sur 11 formes ; ambiguës/sans match : 0

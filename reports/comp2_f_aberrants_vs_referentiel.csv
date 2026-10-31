@@ -1,0 +1,8 @@
+categorie,n_ventes,prix_sous_min,prix_au_dessus_max,pct_prix_hors_fourchette,surface_sous_min,surface_au_dessus_max,pct_surface_hors_typique
+appartement,610,1,24,4.1,0,2,0.3
+chambre,158,0,1,0.6,0,0,0.0
+local commercial,144,0,7,4.9,0,0,0.0
+maison,556,0,14,2.5,0,0,0.0
+studio,310,0,11,3.5,0,0,0.0
+terrain,369,0,6,1.6,0,0,0.0
+villa,461,0,16,3.5,0,1,0.2

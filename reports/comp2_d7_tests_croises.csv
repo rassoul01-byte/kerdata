@@ -1,0 +1,4 @@
+test,n,statistique,p_value,effet,mesure_effet
+ANOVA log(prix) ~ catégorie (ventes),2608,1253.244926,0.0,0.742996,eta²
+Kruskal-Wallis log(prix) ~ catégorie (ventes),2608,1848.266394,0.0,,
+"khi2 catégorie × région (ddl=78, hors mojibake)",3066,113.313921,0.005566,0.078484,V de Cramér
