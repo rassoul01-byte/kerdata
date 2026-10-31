@@ -1,0 +1,5 @@
+echelle,n,tau,p_value,tendance_significative_5pct
+annuelle (8 points),8,0.0,1.0,False
+mensuelle (96 mois),96,-0.0162,0.8148,False
+par vente (toutes sources),2597,-0.0025,0.8502,False
+par vente (hors historique),2079,-0.0201,0.169,False

@@ -278,3 +278,89 @@ def main_d3_d5(racine: Path = Path(".")) -> dict:
     out["autres"].to_csv(rep / "comp2_d4_correlations_chambres_sdb.csv", index=False)
     figures_d2(d, v, rep / "figures")
     return out
+
+
+# ---------------------------------------------------------------------------
+# D6 : tendance temporelle (Mann-Kendall = tau de Kendall entre le temps et la série)
+# ---------------------------------------------------------------------------
+def mann_kendall(serie: pd.Series) -> dict:
+    """Mann-Kendall bilatéral sur une série ordonnée dans le temps + pente de Sen."""
+    y = serie.dropna().to_numpy(float)
+    n = len(y)
+    if n < 4:
+        return dict(n_points=n, tau=np.nan, p_value=np.nan, pente_sen=np.nan)
+    tau, p = st.kendalltau(np.arange(n), y)
+    pentes = [(y[j] - y[i]) / (j - i) for i in range(n) for j in range(i + 1, n)]
+    return dict(n_points=n, tau=tau, p_value=p, pente_sen=float(np.median(pentes)))
+
+
+def preparer_temps(v: pd.DataFrame) -> pd.DataFrame:
+    """Ventes datables, avec un prix standardisé par catégorie (prix / médiane de sa catégorie)."""
+    t = v[v.date_parsee.notna() & (v.date_parsee <= AUJOURD_HUI)].copy()
+    t["annee"] = t.date_parsee.dt.year
+    t["mois"] = t.date_parsee.dt.to_period("M")
+    t["prix_std"] = t.prix_num / t.groupby("categorie_cle").prix_num.transform("median")
+    return t
+
+
+def tendance(t: pd.DataFrame) -> pd.DataFrame:
+    """Médianes annuelles puis Mann-Kendall, par source et global, prix brut et standardisé."""
+    lignes = []
+    groupes = [("toutes sources", t)] + [(s, g) for s, g in t.groupby("source")]
+    for nom, g in groupes:
+        for mesure, col in (("prix brut", "prix_num"), ("prix standardisé/catégorie", "prix_std")):
+            ann = g.groupby("annee")[col].median()
+            res = mann_kendall(ann)
+            lignes.append(dict(groupe=nom, mesure=mesure, annees=f"{ann.index.min()}–{ann.index.max()}",
+                               lignes=len(g), **res))
+    return pd.DataFrame(lignes).round(4)
+
+
+def trous_et_pics(t: pd.DataFrame) -> pd.DataFrame:
+    """Effectifs par année et source (pics/trous), + mois sans aucune vente."""
+    eff = t.groupby(["annee", "source"]).size().unstack(fill_value=0)
+    return eff
+
+
+def tendance_robustesse(t: pd.DataFrame) -> pd.DataFrame:
+    """Mêmes questions à 3 résolutions (annuelle, mensuelle, par vente) + hors historique."""
+    lignes = []
+    ann = mann_kendall(t.groupby("annee").prix_std.median().sort_index())
+    lignes.append(dict(echelle="annuelle (8 points)", n=ann["n_points"], tau=ann["tau"], p_value=ann["p_value"]))
+    mens = mann_kendall(t.groupby("mois").prix_std.median().sort_index())
+    lignes.append(dict(echelle="mensuelle (96 mois)", n=mens["n_points"], tau=mens["tau"], p_value=mens["p_value"]))
+    for nom, g in (("par vente (toutes sources)", t), ("par vente (hors historique)", t[t.source != "historique"])):
+        tau, p = st.kendalltau(g.date_parsee.map(pd.Timestamp.toordinal), g.prix_std)
+        lignes.append(dict(echelle=nom, n=len(g), tau=tau, p_value=p))
+    out = pd.DataFrame(lignes).round(4)
+    out["tendance_significative_5pct"] = out.p_value < 0.05
+    return out
+
+
+def figure_tendance(t: pd.DataFrame, dossier: Path) -> None:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    dossier.mkdir(parents=True, exist_ok=True)
+    fig, ax = plt.subplots(1, 3, figsize=(16, 4.5))
+    for s, g in t.groupby("source"):
+        ax[0].plot(g.groupby("annee").prix_num.median() / 1e6, marker="o", label=s)
+        ax[1].plot(g.groupby("annee").prix_std.median(), marker="o", label=s)
+    ax[0].set(title="Prix médian de vente par année (brut)", ylabel="M FCFA", xlabel="année"); ax[0].legend(fontsize=8)
+    ax[1].set(title="Prix standardisé par catégorie (médiane)", xlabel="année"); ax[1].axhline(1, color="grey", lw=.8)
+    eff = trous_et_pics(t); eff.plot(kind="bar", stacked=True, ax=ax[2], width=.85)
+    ax[2].set(title="Ventes datées par année et source", xlabel="année", ylabel="annonces"); ax[2].legend(fontsize=7)
+    fig.tight_layout(); fig.savefig(dossier / "comp2_tendance_temporelle.png", dpi=110); plt.close(fig)
+
+
+def main_d6(racine: Path = Path(".")) -> dict:
+    d = preparer(charger_corpus(racine)); t = preparer_temps(base_ventes(d))
+    rep = racine / "reports"
+    out = dict(tendance=tendance(t), effectifs=trous_et_pics(t), robustesse=tendance_robustesse(t))
+    out["robustesse"].to_csv(rep / "comp2_d6_robustesse.csv", index=False)
+    out["tendance"].to_csv(rep / "comp2_d6_tendance_mann_kendall.csv", index=False)
+    out["effectifs"].to_csv(rep / "comp2_d6_effectifs_annee_source.csv")
+    figure_tendance(t, rep / "figures")
+    out["t"] = t
+    return out

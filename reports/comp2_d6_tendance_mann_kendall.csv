@@ -1,0 +1,13 @@
+groupe,mesure,annees,lignes,n_points,tau,p_value,pente_sen
+toutes sources,prix brut,2018–2025,2597,8,-0.2143,0.5484,-366291.6667
+toutes sources,prix standardisé/catégorie,2018–2025,2597,8,0.0,1.0,-0.0013
+agence,prix brut,2018–2025,529,8,-0.2143,0.5484,-1863533.3333
+agence,prix standardisé/catégorie,2018–2025,529,8,0.0,1.0,0.0011
+historique,prix brut,2018–2020,518,3,,,
+historique,prix standardisé/catégorie,2018–2020,518,3,,,
+notaires,prix brut,2018–2025,390,8,0.1429,0.7195,1517541.6667
+notaires,prix standardisé/catégorie,2018–2025,390,8,0.1429,0.7195,0.0163
+particuliers,prix brut,2018–2025,473,8,-0.2143,0.5484,-442335.7143
+particuliers,prix standardisé/catégorie,2018–2025,473,8,-0.0714,0.9049,-0.0051
+plateforme,prix brut,2018–2025,687,8,-0.1429,0.7195,-1334250.0
+plateforme,prix standardisé/catégorie,2018–2025,687,8,0.0714,0.9049,0.0018
