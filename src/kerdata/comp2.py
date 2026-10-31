@@ -139,3 +139,142 @@ def main_d1_d2(racine: Path = Path(".")) -> dict:
     out["inter"].to_csv(rep / "comp2_d1_doublons_probables_inter_sources.csv", index=False)
     out["d"] = d
     return out
+
+
+# ---------------------------------------------------------------------------
+# D3 : prix par catégorie ; D4 : relations numériques ; D5 : paradoxe de Simpson
+# (segment `vente`, valeurs > 0, sans nettoyage supplémentaire)
+# ---------------------------------------------------------------------------
+from .typage import parse_entier  # noqa: E402
+
+
+def base_ventes(d: pd.DataFrame) -> pd.DataFrame:
+    v = d[(d.segment == "vente") & (d.prix_num > 0)].copy()
+    v["chambres_num"] = v["chambres"].map(parse_entier)
+    v["sdb_num"] = v["sdb"].map(parse_entier)
+    return v
+
+
+def prix_par_categorie(v: pd.DataFrame) -> pd.DataFrame:
+    """D3 : dispersion de prix par catégorie (brut, ventes)."""
+    ref = pd.read_csv(Path(__file__).resolve().parents[2] / "referentiels" / "referentiel_categories.csv")
+    ref["cle"] = ref.categorie.str.lower()
+    lignes = []
+    for c, g in v.groupby("categorie_cle"):
+        p = g.prix_num
+        q1, q3 = p.quantile(.25), p.quantile(.75)
+        r = ref[ref.cle == c]
+        lignes.append(dict(
+            categorie=c, n=len(p), mediane=p.median(), q1=q1, q3=q3, iqr_sur_mediane=(q3 - q1) / p.median(),
+            cv=p.std() / p.mean(), min=p.min(), max=p.max(),
+            hors_fourchette_ref=int(((p < r.prix_min_indicatif.iloc[0]) | (p > r.prix_max_indicatif.iloc[0])).sum()) if len(r) else np.nan))
+    return pd.DataFrame(lignes).sort_values("cv", ascending=False).round(3)
+
+
+def _corr(x: pd.Series, y: pd.Series) -> dict:
+    ok = x.notna() & y.notna() & (x > 0) & (y > 0)
+    x, y = x[ok], y[ok]
+    if len(x) < 8:
+        return dict(n=len(x), pearson=np.nan, p_pearson=np.nan, spearman=np.nan, p_spearman=np.nan,
+                    pearson_log=np.nan, p_pearson_log=np.nan)
+    rp, pp = st.pearsonr(x, y); rs, ps = st.spearmanr(x, y)
+    rl, pl = st.pearsonr(np.log(x), np.log(y))
+    return dict(n=len(x), pearson=rp, p_pearson=pp, spearman=rs, p_spearman=ps,
+                pearson_log=rl, p_pearson_log=pl)
+
+
+def correlations_prix_surface(v: pd.DataFrame) -> pd.DataFrame:
+    """D4 + D5 : corrélations prix~surface, global puis par catégorie et par source."""
+    lignes = [dict(niveau="global", groupe="toutes catégories", **_corr(v.surface_num, v.prix_num))]
+    for c, g in v.groupby("categorie_cle"):
+        lignes.append(dict(niveau="catégorie", groupe=c, **_corr(g.surface_num, g.prix_num)))
+    for s, g in v.groupby("source"):
+        lignes.append(dict(niveau="source", groupe=s, **_corr(g.surface_num, g.prix_num)))
+    return pd.DataFrame(lignes).round(4)
+
+
+def vif(v: pd.DataFrame, colonnes=("surface_num", "chambres_num", "sdb_num")) -> pd.DataFrame:
+    """D4 : VIF sur les numériques disponibles (lignes complètes)."""
+    x = v[list(colonnes)].dropna()
+    x = x[(x > 0).all(axis=1)]
+    out = []
+    for c in colonnes:
+        autres = [k for k in colonnes if k != c]
+        A = np.column_stack([np.ones(len(x))] + [x[k] for k in autres])
+        beta, *_ = np.linalg.lstsq(A, x[c], rcond=None)
+        r2 = 1 - ((x[c] - A @ beta) ** 2).sum() / ((x[c] - x[c].mean()) ** 2).sum()
+        out.append(dict(variable=c, n=len(x), r2_vs_autres=round(r2, 4), vif=round(1 / (1 - r2), 3)))
+    return pd.DataFrame(out)
+
+
+def correlations_autres(v: pd.DataFrame) -> pd.DataFrame:
+    """D4 : Spearman prix~chambres et prix~sdb, global puis par catégorie (même test que Simpson)."""
+    lignes = []
+    for var in ("chambres_num", "sdb_num"):
+        groupes = [("global", "toutes catégories", v)] + [("catégorie", c, g) for c, g in v.groupby("categorie_cle")]
+        for niveau, cle, g in groupes:
+            x = g[[var, "prix_num"]].dropna()
+            x = x[x[var] > 0]
+            if len(x) >= 8 and x[var].nunique() > 1:
+                rs, ps = st.spearmanr(x[var], x.prix_num)
+                lignes.append(dict(variable=var.replace("_num", ""), niveau=niveau, groupe=cle, n=len(x),
+                                   spearman=round(rs, 4), p_value=round(ps, 4)))
+    return pd.DataFrame(lignes)
+
+
+def figures_d2(d: pd.DataFrame, v: pd.DataFrame, dossier: Path) -> None:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    dossier.mkdir(parents=True, exist_ok=True)
+    # Fig 1 : manquants (structurels vs aléatoires), source × champ
+    m = manquants(d)
+    m["pct"] = m.pct_total_inutilisable
+    mat = m.pivot(index="champ", columns="source", values="pct").reindex(CHAMPS_UTILES)
+    fig, ax = plt.subplots(figsize=(8, 5))
+    im = ax.imshow(mat.values, cmap="Reds", vmin=0, vmax=100, aspect="auto")
+    ax.set_xticks(range(mat.shape[1]), mat.columns, rotation=30); ax.set_yticks(range(mat.shape[0]), mat.index)
+    for i in range(mat.shape[0]):
+        for j in range(mat.shape[1]):
+            ax.text(j, i, f"{mat.values[i, j]:.0f}" if mat.values[i, j] >= 1 else ("<1" if mat.values[i, j] > 0 else ""),
+                    ha="center", va="center", fontsize=8, color="black" if mat.values[i, j] < 60 else "white")
+    ax.set_title("Valeurs inutilisables (%) par source et champ\n100 % = structurel (source qui ne fournit pas le champ)")
+    fig.colorbar(im, label="%"); fig.tight_layout(); fig.savefig(dossier / "comp2_manquants.png", dpi=110); plt.close(fig)
+    # Fig 2 : prix par catégorie (ventes, échelle log)
+    ordre = v.groupby("categorie_cle").prix_num.median().sort_values().index
+    fig, ax = plt.subplots(figsize=(9, 5))
+    ax.boxplot([v[v.categorie_cle == c].prix_num / 1e6 for c in ordre], tick_labels=ordre, vert=True, showfliers=True)
+    ax.set_yscale("log"); ax.set_ylabel("prix de vente (M FCFA, échelle log)"); ax.tick_params(axis="x", rotation=30)
+    ax.set_title("Prix de vente par catégorie (brut, sans nettoyage)"); fig.tight_layout()
+    fig.savefig(dossier / "comp2_prix_par_categorie.png", dpi=110); plt.close(fig)
+    # Fig 3 : Simpson
+    x = v[v.surface_num > 0]
+    fig, ax = plt.subplots(1, 2, figsize=(13, 5))
+    couleurs = dict(zip(sorted(x.categorie_cle.unique()), plt.cm.tab10.colors))
+    for c, g in x.groupby("categorie_cle"):
+        ax[0].scatter(np.log(g.surface_num), np.log(g.prix_num), s=6, alpha=.4, color=couleurs[c], label=c)
+        if len(g) > 8:
+            b = np.polyfit(np.log(g.surface_num), np.log(g.prix_num), 1); xs = np.linspace(np.log(g.surface_num).min(), np.log(g.surface_num).max(), 20)
+            ax[0].plot(xs, np.polyval(b, xs), color=couleurs[c], lw=2)
+    ax[0].set(xlabel="log(surface)", ylabel="log(prix)", title="Par catégorie : droites quasi plates")
+    ax[0].legend(fontsize=7, markerscale=2)
+    ax[1].scatter(np.log(x.surface_num), np.log(x.prix_num), s=6, alpha=.3, color="grey")
+    b = np.polyfit(np.log(x.surface_num), np.log(x.prix_num), 1); xs = np.linspace(np.log(x.surface_num).min(), np.log(x.surface_num).max(), 20)
+    ax[1].plot(xs, np.polyval(b, xs), color="red", lw=2)
+    r = np.corrcoef(np.log(x.surface_num), np.log(x.prix_num))[0, 1]
+    ax[1].set(xlabel="log(surface)", title=f"Global : r = {r:.2f} (effet de composition)")
+    fig.suptitle("Paradoxe de Simpson : prix ~ surface (ventes)"); fig.tight_layout()
+    fig.savefig(dossier / "comp2_simpson_prix_surface.png", dpi=110); plt.close(fig)
+
+
+def main_d3_d5(racine: Path = Path(".")) -> dict:
+    d = preparer(charger_corpus(racine)); v = base_ventes(d)
+    rep = racine / "reports"; rep.mkdir(exist_ok=True)
+    out = dict(prix_cat=prix_par_categorie(v), corr=correlations_prix_surface(v), vif=vif(v), autres=correlations_autres(v))
+    out["prix_cat"].to_csv(rep / "comp2_d3_prix_par_categorie.csv", index=False)
+    out["corr"].to_csv(rep / "comp2_d4_d5_correlations_prix_surface.csv", index=False)
+    out["vif"].to_csv(rep / "comp2_d4_vif.csv", index=False)
+    out["autres"].to_csv(rep / "comp2_d4_correlations_chambres_sdb.csv", index=False)
+    figures_d2(d, v, rep / "figures")
+    return out

@@ -1,0 +1,13 @@
+variable,niveau,groupe,n,spearman,p_value
+chambres,global,toutes catégories,1527,-0.0398,0.12
+chambres,catégorie,appartement,442,0.0531,0.2652
+chambres,catégorie,chambre,125,-0.1582,0.0781
+chambres,catégorie,maison,403,-0.0816,0.1019
+chambres,catégorie,studio,226,0.0126,0.851
+chambres,catégorie,villa,331,0.0426,0.4395
+sdb,global,toutes catégories,1716,-0.0285,0.2385
+sdb,catégorie,appartement,515,-0.0595,0.1779
+sdb,catégorie,local commercial,135,-0.0669,0.4411
+sdb,catégorie,maison,446,0.0556,0.2412
+sdb,catégorie,studio,253,-0.0997,0.1137
+sdb,catégorie,villa,362,-0.0054,0.9187
