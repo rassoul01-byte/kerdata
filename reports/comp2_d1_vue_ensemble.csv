@@ -1,0 +1,6 @@
+source,lignes,colonnes_fournies,date_min,date_max,dates_futures,doublons_exacts,doublons_id,doublons_probables_hors_id
+agence,640,11,2018-01-03,2025-12-29,0,0,0,0
+historique,528,9,2018-01-04,2020-01-01,0,0,0,0
+notaires,410,9,2018-01-03,2025-12-25,0,0,0,0
+particuliers,731,11,2018-01-01,2025-12-20,0,0,0,0
+plateforme,875,15,2018-01-01,2028-12-01,5,15,15,0

@@ -1,0 +1,6 @@
+source,n,pct_manquants_prix,pct_manquants_surface,pct_manquants_date,prix_non_numeriques,prix_non_convertibles,dates_non_interpretables,doublons_id
+agence,640,0.0,0.0,0.0,0,0,0,0
+historique,528,0.0,0.0,0.0,82,10,0,0
+notaires,410,3.4,0.0,0.0,0,0,6,0
+particuliers,731,8.3,10.3,0.0,7,2,0,0
+plateforme,875,0.0,0.6,0.0,71,6,0,15

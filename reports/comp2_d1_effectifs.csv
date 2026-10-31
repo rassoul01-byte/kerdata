@@ -1,0 +1,141 @@
+champ,source,modalite,effectif,part_source_pct
+categorie,agence,Appartement,179,28.0
+categorie,agence,Chambre,17,2.7
+categorie,agence,Local commercial,9,1.4
+categorie,agence,Maison,149,23.3
+categorie,agence,Studio,67,10.5
+categorie,agence,Terrain,96,15.0
+categorie,agence,Villa,123,19.2
+categorie,historique,APPARTEMENT,30,5.7
+categorie,historique,Appartement,49,9.3
+categorie,historique,CHAMBRE,12,2.3
+categorie,historique,Chambre,61,11.6
+categorie,historique,LOCAL COMMERCIAL,36,6.8
+categorie,historique,Local commercial,52,9.8
+categorie,historique,MAISON,21,4.0
+categorie,historique,Maison,61,11.6
+categorie,historique,STUDIO,15,2.8
+categorie,historique,Studio,49,9.3
+categorie,historique,TERRAIN,22,4.2
+categorie,historique,Terrain,49,9.3
+categorie,historique,VILLA,16,3.0
+categorie,historique,Villa,55,10.4
+categorie,notaires,Appartement,92,22.4
+categorie,notaires,Chambre,15,3.7
+categorie,notaires,Local commercial,5,1.2
+categorie,notaires,Maison,106,25.9
+categorie,notaires,Studio,51,12.4
+categorie,notaires,Terrain,43,10.5
+categorie,notaires,Villa,98,23.9
+categorie,particuliers,Appartement,176,24.1
+categorie,particuliers,Chambre,43,5.9
+categorie,particuliers,Local commercial,22,3.0
+categorie,particuliers,Maison,153,20.9
+categorie,particuliers,Studio,94,12.9
+categorie,particuliers,Terrain,142,19.4
+categorie,particuliers,Villa,101,13.8
+categorie,plateforme,Appartement,220,25.1
+categorie,plateforme,Chambre,41,4.7
+categorie,plateforme,Local commercial,40,4.6
+categorie,plateforme,Maison,188,21.5
+categorie,plateforme,Studio,107,12.2
+categorie,plateforme,Terrain,123,14.1
+categorie,plateforme,Villa,151,17.3
+categorie,plateforme,appart,5,0.6
+region,agence,Dakar,51,8.0
+region,agence,Diourbel,48,7.5
+region,agence,Fatick,44,6.9
+region,agence,Kaffrine,49,7.7
+region,agence,Kaolack,51,8.0
+region,agence,Kolda,37,5.8
+region,agence,Kédougou,38,5.9
+region,agence,Louga,41,6.4
+region,agence,Matam,50,7.8
+region,agence,Saint-Louis,46,7.2
+region,agence,Sédhiou,57,8.9
+region,agence,Tambacounda,36,5.6
+region,agence,Thiès,41,6.4
+region,agence,Ziguinchor,51,8.0
+region,historique,Dakar,30,5.7
+region,historique,Diourbel,31,5.9
+region,historique,Fatick,35,6.6
+region,historique,Kaffrine,34,6.4
+region,historique,Kaolack,37,7.0
+region,historique,Kolda,51,9.7
+region,historique,K�dougou,37,7.0
+region,historique,Louga,40,7.6
+region,historique,Matam,42,8.0
+region,historique,Saint-Louis,32,6.1
+region,historique,S�dhiou,43,8.1
+region,historique,Tambacounda,41,7.8
+region,historique,Thi�s,38,7.2
+region,historique,Ziguinchor,37,7.0
+region,notaires,Dakar,38,9.3
+region,notaires,Diourbel,28,6.8
+region,notaires,Fatick,31,7.6
+region,notaires,Kaffrine,28,6.8
+region,notaires,Kaolack,31,7.6
+region,notaires,Kolda,27,6.6
+region,notaires,Kédougou,29,7.1
+region,notaires,Louga,37,9.0
+region,notaires,Matam,29,7.1
+region,notaires,Saint-Louis,27,6.6
+region,notaires,Sédhiou,26,6.3
+region,notaires,Tambacounda,21,5.1
+region,notaires,Thiès,27,6.6
+region,notaires,Ziguinchor,31,7.6
+region,particuliers,Dakar,68,9.3
+region,particuliers,Diourbel,57,7.8
+region,particuliers,Fatick,39,5.3
+region,particuliers,Kaffrine,58,7.9
+region,particuliers,Kaolack,49,6.7
+region,particuliers,Kolda,48,6.6
+region,particuliers,Kédougou,43,5.9
+region,particuliers,Louga,61,8.3
+region,particuliers,Matam,54,7.4
+region,particuliers,Saint-Louis,48,6.6
+region,particuliers,Sédhiou,47,6.4
+region,particuliers,Tambacounda,41,5.6
+region,particuliers,Thiès,60,8.2
+region,particuliers,Ziguinchor,58,7.9
+region,plateforme,Dakar,66,7.5
+region,plateforme,Diourbel,88,10.1
+region,plateforme,Fatick,72,8.2
+region,plateforme,Kaffrine,55,6.3
+region,plateforme,Kaolack,49,5.6
+region,plateforme,Kolda,67,7.7
+region,plateforme,Kédougou,57,6.5
+region,plateforme,Louga,56,6.4
+region,plateforme,Matam,64,7.3
+region,plateforme,Saint-Louis,60,6.9
+region,plateforme,Sédhiou,62,7.1
+region,plateforme,Tambacounda,59,6.7
+region,plateforme,Thiès,57,6.5
+region,plateforme,Ziguinchor,63,7.2
+statut,agence,Disponible,61,9.5
+statut,agence,En vente,198,30.9
+statut,agence,Loué,47,7.3
+statut,agence,Vendu,334,52.2
+statut,historique,,528,100.0
+statut,notaires,Acte signé,42,10.2
+statut,notaires,VENDU,4,1.0
+statut,notaires,Vendu,278,67.8
+statut,notaires,Vente conclue,86,21.0
+statut,particuliers,Disponible,128,17.5
+statut,particuliers,En vente,233,31.9
+statut,particuliers,Loué,91,12.4
+statut,particuliers,Vendu,225,30.8
+statut,particuliers,À confirmer,54,7.4
+statut,plateforme,Disponible,86,9.8
+statut,plateforme,En vente,255,29.1
+statut,plateforme,Loué,77,8.8
+statut,plateforme,Retiré,37,4.2
+statut,plateforme,Sous offre,62,7.1
+statut,plateforme,Vendu,358,40.9
+transaction,agence,,640,100.0
+transaction,historique,,528,100.0
+transaction,notaires,,410,100.0
+transaction,particuliers,location,219,30.0
+transaction,particuliers,vente,512,70.0
+transaction,plateforme,location,177,20.2
+transaction,plateforme,vente,698,79.8
