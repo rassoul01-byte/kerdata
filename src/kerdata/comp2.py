@@ -380,7 +380,7 @@ def _cle(s: str) -> str:
     return _ud.normalize("NFKD", s.strip().lower()).encode("ascii", "ignore").decode()
 
 
-def tests_croises(d: pd.DataFrame, v: pd.DataFrame) -> pd.DataFrame:
+def croiser_variables(d: pd.DataFrame, v: pd.DataFrame) -> pd.DataFrame:
     """D7 : ANOVA/Kruskal log(prix) ~ catégorie (ventes) ; khi2 + V de Cramér catégorie × région."""
     lignes = []
     v = v.assign(cat=v.categorie_cle.replace({"appart": "appartement"}))
@@ -447,8 +447,8 @@ def coherence_geographique(d: pd.DataFrame) -> pd.DataFrame:
 
 def main_d7_f(racine: Path = Path(".")) -> dict:
     d = preparer(charger_corpus(racine)); v = base_ventes(d); rep = racine / "reports"
-    out = dict(croises=tests_croises(d, v), aberrants=aberrants_diagnostic(d), geo=coherence_geographique(d))
-    out["croises"].to_csv(rep / "comp2_d7_tests_croises.csv", index=False)
+    out = dict(croises=croiser_variables(d, v), aberrants=aberrants_diagnostic(d), geo=coherence_geographique(d))
+    out["croises"].to_csv(rep / "comp2_d7_croiser_variables.csv", index=False)
     out["aberrants"].to_csv(rep / "comp2_f_aberrants_vs_referentiel.csv", index=False)
     out["geo"].to_csv(rep / "comp2_f_coherence_geographique.csv", index=False)
     return out

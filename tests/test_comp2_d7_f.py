@@ -4,7 +4,7 @@ import pytest
 
 from kerdata.comp1 import charger_corpus
 from kerdata.comp2 import (aberrants_diagnostic, base_ventes, coherence_geographique,
-                           preparer, tests_croises)
+                           preparer, croiser_variables)
 
 RACINE = Path(__file__).resolve().parent.parent
 
@@ -15,13 +15,13 @@ def d():
 
 
 def test_anova_categorie_explique_l_essentiel_du_prix(d):
-    t = tests_croises(d, base_ventes(d)).set_index("mesure_effet")
+    t = croiser_variables(d, base_ventes(d)).set_index("mesure_effet")
     assert t.loc["eta²", "effet"] == pytest.approx(0.743, abs=0.01)
     assert t.loc["eta²", "p_value"] < 0.001
 
 
 def test_khi2_categorie_region_significatif_mais_effet_faible(d):
-    t = tests_croises(d, base_ventes(d)).set_index("mesure_effet")
+    t = croiser_variables(d, base_ventes(d)).set_index("mesure_effet")
     assert t.loc["V de Cramér", "p_value"] < 0.05
     assert t.loc["V de Cramér", "effet"] < 0.1
 
