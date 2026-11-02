@@ -1,0 +1,14 @@
+variable,type,cardinalite,ordre,dispo_en_prod,encodage_ou_scaler,justification
+prix (cible),numérique,—,—,non,log(prix) ; pas de scaler (c'est la cible),"skew 1.86 → -0.22 ; prix minimum = 5156000 > 0, le log est défini"
+transaction,catégorielle binaire,1,non,oui,EXCLUE (constante sur le segment vente),"le modèle porte sur les ventes (comp 1, décision 1.6) : une seule valeur, variance nulle ; binaire 0/1 si un modèle commun était fait"
+categorie,catégorielle,7,non,oui,"one-hot (7 colonnes), handle_unknown=ignore","pas d'ordre ; porte l'essentiel du signal (η² = 0,74, comp 2) ; label encoding interdit (faux ordre)"
+region,catégorielle,14,non,oui,"one-hot (14 colonnes), handle_unknown=ignore",effectif minimum 161 ; explique ω² = 2.5 % du prix relatif (p = 5.7e-11)
+ville (commune),catégorielle,46,non,oui,EXCLUE du one-hot (frequency à tester en comp 6),"emboîtée dans région (exception : 1 ville à 2 régions, les lignes Dakar/Ziguinchor signalées en comp 3) ; gain ω² ville vs région = 0.6 point pour 46 colonnes"
+statut,catégorielle,6,non,NON (Vendu = information postérieure à la mise en vente),EXCLUE (fuite type 2),"V(source, statut) = 0.58 : proxy de la source (fuite type 4) ; aucun lien avec le prix relatif (η² = 0.0011, p = 0.70)"
+source,catégorielle,5,non,NON (identifiant de flux),EXCLUE (audit seulement),"η² sur le prix relatif = 0.0005 (aucun signal) ; V(source, catégorie) = 0.17 : proxy de composition"
+transaction_origine,catégorielle,2,non,NON (métadonnée de nettoyage),EXCLUE (fuite type 4),"V(source, transaction_origine) = 1.00 : reconstitue la source"
+surface,numérique,—,—,oui,log1p puis RobustScaler,"skew 2.49 → 0.04 ; outliers conservés (comp 3) → échelle robuste ; seule, non prédictive (Simpson, comp 2/4)"
+chambres,numérique entière,—,—,oui,imputation par catégorie (fit train) puis RobustScaler,"26.8 % vides, structurels (plateforme 100 %) ; aucun indicateur de manque (révélerait la source)"
+sdb,numérique entière,—,—,oui,imputation par catégorie (fit train) puis RobustScaler,"15.4 % vides, structurels (notaires 100 %) ; aucun indicateur de manque"
+"date → annee, mois",temporelle,—,cyclique (mois),oui,"annee (StandardScaler) + mois en sin/cos ; candidats, élagage en comp 6","aucun signal : η² annee = 0.0056, mois = 0.0045 ; cohérent avec l'absence de tendance (comp 2)"
+"id, ligne_id",identifiant,—,—,non,EXCLUES,identifiants : aucune information sur le bien
