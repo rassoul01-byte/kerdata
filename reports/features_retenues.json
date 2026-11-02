@@ -1,0 +1,25 @@
+{
+  "retenues": [
+    "categorie",
+    "region",
+    "surface_log"
+  ],
+  "seuil": 0.01,
+  "k": 5,
+  "graine": 42,
+  "rejetees": [
+    "annee",
+    "mois",
+    "chambres_sdb",
+    "distance_dakar_km",
+    "ville_frequence",
+    "surface_x_categorie",
+    "surface_par_chambre",
+    "prix_m2",
+    "prix_m2 + surface_log",
+    "ratio_prix_fourchette",
+    "est_hors_fourchette",
+    "source",
+    "statut"
+  ]
+}
