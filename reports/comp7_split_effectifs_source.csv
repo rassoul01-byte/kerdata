@@ -1,0 +1,6 @@
+source,train,val,test,total,train_pct,val_pct,test_pct
+agence,367,79,79,525,20.7,20.79,20.73
+historique,363,77,78,518,20.47,20.26,20.47
+notaires,274,58,58,390,15.45,15.26,15.22
+particuliers,295,63,65,423,16.64,16.58,17.06
+plateforme,474,103,101,678,26.73,27.11,26.51
