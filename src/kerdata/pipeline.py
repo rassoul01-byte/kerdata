@@ -77,4 +77,14 @@ def executer(racine: Path = Path(".")) -> dict:
     with open(sortie / "rapport_qualite.md", "a", encoding="utf-8") as fh:
         fh.write("\n" + c["markdown"])
     res["restitution"] = c
+
+    # Compétence 5 : split (prérequis du fit), audits des variables, preuve de non-fuite
+    from . import comp5
+    from .split import produire_split
+    cons = pd.read_csv(sortie / "corpus_conserve.csv")
+    res["split"] = produire_split(cons, racine)
+    res["comp5"] = comp5.main(racine)
+    res["preuve"] = comp5.main_preuve(racine)
+    with open(sortie / "rapport_qualite.md", "a", encoding="utf-8") as fh:
+        fh.write("\n" + comp5.markdown(res["comp5"], res["preuve"], res["split"]))
     return res

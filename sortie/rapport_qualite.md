@@ -181,3 +181,44 @@ Les valeurs sont quasi identiques : le nettoyage n'a pas déformé les distribut
 | V4 | Quelles numériques sont redondantes ? | 3.13 : chambres/sdb non imputées (vides structurels) ; VIF à vérifier en comp 5/6 |
 | V5 | Le nettoyage a-t-il supprimé les anomalies ? | 3.1 à 3.6 : quarantaine, normalisation, mojibake, doublons exacts |
 | V6 | Les 5 sources sont-elles comparables ? | 3.2 + 3.3 + 3.12 : mojibake, catégories et transaction alignés sur les 5 sources |
+
+## Encodage et normalisation (compétence 5)
+
+Segment `vente` (2534 lignes). Tout transformateur est ajusté sur le **train** seulement (split 70/15/15, graine 42, stratifié sur categorie + source).
+
+### Tableau des variables
+
+| variable | type | cardinalite | ordre | dispo_en_prod | encodage_ou_scaler | justification |
+|---|---|---|---|---|---|---|
+| prix (cible) | numérique | — | — | non | log(prix) ; pas de scaler (c'est la cible) | skew 1.86 → -0.22 ; prix minimum = 5156000 > 0, le log est défini |
+| transaction | catégorielle binaire | 1 | non | oui | EXCLUE (constante sur le segment vente) | le modèle porte sur les ventes (comp 1, décision 1.6) : une seule valeur, variance nulle ; binaire 0/1 si un modèle commun était fait |
+| categorie | catégorielle | 7 | non | oui | one-hot (7 colonnes), handle_unknown=ignore | pas d'ordre ; porte l'essentiel du signal (η² = 0,74, comp 2) ; label encoding interdit (faux ordre) |
+| region | catégorielle | 14 | non | oui | one-hot (14 colonnes), handle_unknown=ignore | effectif minimum 161 ; explique ω² = 2.5 % du prix relatif (p = 5.7e-11) |
+| ville (commune) | catégorielle | 46 | non | oui | EXCLUE du one-hot (frequency à tester en comp 6) | emboîtée dans région (exception : 1 ville à 2 régions, les lignes Dakar/Ziguinchor signalées en comp 3) ; gain ω² ville vs région = 0.6 point pour 46 colonnes |
+| statut | catégorielle | 6 | non | NON (Vendu = information postérieure à la mise en vente) | EXCLUE (fuite type 2) | V(source, statut) = 0.58 : proxy de la source (fuite type 4) ; aucun lien avec le prix relatif (η² = 0.0011, p = 0.70) |
+| source | catégorielle | 5 | non | NON (identifiant de flux) | EXCLUE (audit seulement) | η² sur le prix relatif = 0.0005 (aucun signal) ; V(source, catégorie) = 0.17 : proxy de composition |
+| transaction_origine | catégorielle | 2 | non | NON (métadonnée de nettoyage) | EXCLUE (fuite type 4) | V(source, transaction_origine) = 1.00 : reconstitue la source |
+| surface | numérique | — | — | oui | log1p puis RobustScaler | skew 2.49 → 0.04 ; outliers conservés (comp 3) → échelle robuste ; seule, non prédictive (Simpson, comp 2/4) |
+| chambres | numérique entière | — | — | oui | imputation par catégorie (fit train) puis RobustScaler | 26.8 % vides, structurels (plateforme 100 %) ; aucun indicateur de manque (révélerait la source) |
+| sdb | numérique entière | — | — | oui | imputation par catégorie (fit train) puis RobustScaler | 15.4 % vides, structurels (notaires 100 %) ; aucun indicateur de manque |
+| date → annee, mois | temporelle | — | cyclique (mois) | oui | annee (StandardScaler) + mois en sin/cos ; candidats, élagage en comp 6 | aucun signal : η² annee = 0.0056, mois = 0.0045 ; cohérent avec l'absence de tendance (comp 2) |
+| id, ligne_id | identifiant | — | — | non | EXCLUES | identifiants : aucune information sur le bien |
+
+### Décisions sur les trois variables à risque
+
+- **`statut` : exclu (fuite types 2 et 4).** `Vendu` (1249 lignes) n'est connu qu'après la mise en vente ; V(source, statut) = 0.58 fait de `statut` un proxy de la source ; aucun lien avec le prix relatif (η² = 0.0011, p = 0.70).
+- **`source` : exclue.** η² sur le prix relatif = 0.0005 (aucun signal) ; V(source, catégorie) = 0.17. Utilisée pour l'audit et la stratification du split seulement.
+- **`commune` : exclue du one-hot.** 46 modalités, aucune sous 10 occurrences (la fiche annonçait l'inverse) ; gain de variance expliquée par rapport à la région = 0.56 point ; frequency encoding à tester en comp 6.
+
+### Preuve de non-fuite (fit sur train uniquement)
+
+| ajustement | variable | moyenne_train | moyenne_val | mediane_train | mediane_val |
+|---|---|---|---|---|---|
+| fit sur train (correct) | annee | -0.0 | -0.00304 | 0.03638 | -0.37978 |
+| fit sur train (correct) | surface_log | -0.03632 | -0.05478 | 0.0 | -0.06133 |
+| fit sur validation (fuite simulée) | annee | 0.00309 | -0.0 | 0.03999 | -0.38213 |
+| fit sur validation (fuite simulée) | surface_log | 0.02319 | 0.00607 | 0.05687 | 0.0 |
+| fit sur train+val (fit global) | annee | 0.00054 | -0.00251 | 0.03701 | -0.38018 |
+| fit sur train+val (fit global) | surface_log | -0.03019 | -0.0486 | 0.00602 | -0.05513 |
+
+Ajusté sur le train : moyenne de `annee` = 0 sur le train et -0.0030 sur la validation (≠ 0 : pas de fuite). Ajusté sur la validation, sa moyenne tomberait à 0 exactement : c'est la signature d'une fuite. `chambres` et `sdb` (entiers discrets) ne sont pas probants : leur médiane vaut 0 partout par construction.

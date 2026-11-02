@@ -67,3 +67,15 @@ def test_agence_loyers_confirmes_par_statut(projet):
     assert v.loc[("agence", "location"), "lignes_inferees"] == 106
     assert v.loc[("agence", "location"), "pct_confirme"] == 100.0
     assert v.loc[("agence", "vente"), "pct_confirme"] == 100.0
+
+
+def test_rapport_contient_la_section_encodage_et_la_preuve(projet):
+    tmp, res = projet
+    t = (tmp / "sortie" / "rapport_qualite.md").read_text(encoding="utf-8")
+    for mot in ("Encodage et normalisation (compétence 5)", "Preuve de non-fuite", "`statut` : exclu", "`commune` : exclue"):
+        assert mot in t
+    for f in ("split.csv",):
+        assert (tmp / "sortie" / f).exists()
+    for f in ("comp5_tableau_variables.csv", "comp5_preuve_non_fuite.csv", "comp7_split_proportions_categorie.csv"):
+        assert (tmp / "reports" / f).exists()
+    assert res["split"]["strategie"] == "categorie + source"

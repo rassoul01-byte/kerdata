@@ -166,3 +166,29 @@ def main_preuve(racine: Path = Path(".")) -> pd.DataFrame:
     p = preuve_non_fuite(pd.read_csv(racine / "sortie" / "corpus_conserve.csv"), pd.read_csv(racine / "sortie" / "split.csv"))
     p.round(6).to_csv(racine / "reports" / "comp5_preuve_non_fuite.csv", index=False)
     return p
+
+
+def markdown(a: dict, preuve: pd.DataFrame, split: dict) -> str:
+    from .qualite import md_table
+    s, so, cr = a["statut"], a["source"], a["cr"]
+    p = preuve[preuve.ajustement.str.startswith("fit sur train (") & preuve.variable.isin(["annee", "surface_log"])]
+    pf = preuve[preuve.variable.isin(["annee", "surface_log"])][["ajustement", "variable", "moyenne_train", "moyenne_val", "mediane_train", "mediane_val"]].round(5)
+    tab = a["tableau"].copy()
+    return f"""## Encodage et normalisation (compétence 5)
+
+Segment `vente` ({len(a['v'])} lignes). Tout transformateur est ajusté sur le **train** seulement (split 70/15/15, graine {split['graine']}, stratifié sur {split['strategie']}).
+
+### Tableau des variables
+
+{md_table(tab)}
+### Décisions sur les trois variables à risque
+
+- **`statut` : exclu (fuite types 2 et 4).** `Vendu` ({s['n_vendu']} lignes) n'est connu qu'après la mise en vente ; V(source, statut) = {s['v_source_statut']:.2f} fait de `statut` un proxy de la source ; aucun lien avec le prix relatif (η² = {s['eta2']:.4f}, p = {s['p_anova']:.2f}).
+- **`source` : exclue.** η² sur le prix relatif = {so['eta2_prix_std']:.4f} (aucun signal) ; V(source, catégorie) = {so['v_source_categorie']:.2f}. Utilisée pour l'audit et la stratification du split seulement.
+- **`commune` : exclue du one-hot.** {cr['n_villes']} modalités, aucune sous 10 occurrences (la fiche annonçait l'inverse) ; gain de variance expliquée par rapport à la région = {100 * cr['gain_ville_vs_region']:.2f} point ; frequency encoding à tester en comp 6.
+
+### Preuve de non-fuite (fit sur train uniquement)
+
+{md_table(pf)}
+Ajusté sur le train : moyenne de `annee` = 0 sur le train et {p[p.variable == 'annee'].moyenne_val.iloc[0]:.4f} sur la validation (≠ 0 : pas de fuite). Ajusté sur la validation, sa moyenne tomberait à 0 exactement : c'est la signature d'une fuite. `chambres` et `sdb` (entiers discrets) ne sont pas probants : leur médiane vaut 0 partout par construction.
+"""
