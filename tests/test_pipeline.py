@@ -15,7 +15,7 @@ def projet(tmp_path_factory):
     tmp = tmp_path_factory.mktemp("kerdata")
     shutil.copytree(RACINE / "sources", tmp / "sources")
     shutil.copytree(RACINE / "referentiels", tmp / "referentiels")
-    res = executer(tmp)
+    res = executer(tmp, etapes_longues=False)
     return tmp, res
 
 
@@ -79,3 +79,14 @@ def test_rapport_contient_la_section_encodage_et_la_preuve(projet):
     for f in ("comp5_tableau_variables.csv", "comp5_preuve_non_fuite.csv", "comp7_split_proportions_categorie.csv"):
         assert (tmp / "reports" / f).exists()
     assert res["split"]["strategie"] == "categorie + source"
+
+
+def test_pipeline_complet_avec_comp6_dans_le_rapport(tmp_path_factory):
+    tmp = tmp_path_factory.mktemp("kerdata_complet")
+    shutil.copytree(RACINE / "sources", tmp / "sources")
+    shutil.copytree(RACINE / "referentiels", tmp / "referentiels")
+    res = executer(tmp)
+    assert res["comp6"]["retenues"] == ["categorie", "region", "surface_log"]
+    t = (tmp / "sortie" / "rapport_qualite.md").read_text(encoding="utf-8")
+    assert "Feature engineering (compétence 6)" in t and "prix_m2 + surface_log" in t
+    assert (tmp / "reports" / "dictionnaire_features.csv").exists() and (tmp / "reports" / "features_retenues.json").exists()

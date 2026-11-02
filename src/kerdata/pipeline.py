@@ -31,7 +31,7 @@ def _motifs(serie: pd.Series) -> pd.DataFrame:
     return pd.DataFrame(sorted(c.items(), key=lambda kv: -kv[1]), columns=["motif", "lignes"])
 
 
-def executer(racine: Path = Path(".")) -> dict:
+def executer(racine: Path = Path("."), etapes_longues: bool = True) -> dict:
     racine = Path(racine)
     sortie, rep = racine / "sortie", racine / "reports"
     sortie.mkdir(exist_ok=True); rep.mkdir(exist_ok=True)
@@ -87,4 +87,10 @@ def executer(racine: Path = Path(".")) -> dict:
     res["preuve"] = comp5.main_preuve(racine)
     with open(sortie / "rapport_qualite.md", "a", encoding="utf-8") as fh:
         fh.write("\n" + comp5.markdown(res["comp5"], res["preuve"], res["split"]))
+
+    if etapes_longues:                       # compétence 6 : CV sur le train (quelques dizaines de secondes)
+        from . import comp6
+        res["comp6"] = comp6.main(racine)
+        with open(sortie / "rapport_qualite.md", "a", encoding="utf-8") as fh:
+            fh.write("\n" + comp6.markdown(res["comp6"]["tab"], res["comp6"]["retenues"], res["comp6"]["n_train"]))
     return res

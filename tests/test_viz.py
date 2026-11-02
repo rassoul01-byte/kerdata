@@ -15,7 +15,7 @@ def projet(tmp_path_factory):
     tmp = tmp_path_factory.mktemp("kerdata_viz")
     shutil.copytree(RACINE / "sources", tmp / "sources")
     shutil.copytree(RACINE / "referentiels", tmp / "referentiels")
-    return tmp, executer(tmp)["restitution"]
+    return tmp, executer(tmp, etapes_longues=False)["restitution"]
 
 
 def test_six_figures_sauvegardees(projet):

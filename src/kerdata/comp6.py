@@ -180,3 +180,19 @@ if __name__ == "__main__":
     r = main()
     print(r["tab"][["variable", "r2_seul", "gain", "gain_ecart_type_plis", "gain_foret", "decision"]].round(4).to_string(index=False))
     print("retenues :", r["retenues"])
+
+
+def markdown(tab: pd.DataFrame, retenues: list[str], n_train: int) -> str:
+    from .qualite import md_table
+    t = tab[["variable", "type", "base", "r2_seul", "r2_avec", "gain", "gain_foret", "decision"]].copy()
+    for c in ("r2_seul", "r2_avec", "gain", "gain_foret"):
+        t[c] = t[c].map(lambda x: f"{x:+.4f}" if c.startswith("gain") else f"{x:.4f}")
+    base = tab.r2_base.iloc[0]
+    return f"""## Feature engineering (compétence 6)
+
+CV à {K} plis sur le **train seul** ({n_train} lignes), baseline `categorie` : R² = {base:.4f}. Une candidate à la fois, seuil ±{SEUIL}, graine {GRAINE}.
+Les fuites sont créées volontairement pour constater le mirage : `prix_m2 + surface_log` atteint R² = {tab.set_index('variable').loc['prix_m2 + surface_log', 'r2_avec']:.4f}.
+
+{md_table(t)}
+**Features retenues : {", ".join(retenues)}.** Dictionnaire complet : `reports/dictionnaire_features.csv`.
+"""

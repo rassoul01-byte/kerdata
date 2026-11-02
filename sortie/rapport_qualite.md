@@ -222,3 +222,28 @@ Segment `vente` (2534 lignes). Tout transformateur est ajusté sur le **train** 
 | fit sur train+val (fit global) | surface_log | -0.03019 | -0.0486 | 0.00602 | -0.05513 |
 
 Ajusté sur le train : moyenne de `annee` = 0 sur le train et -0.0030 sur la validation (≠ 0 : pas de fuite). Ajusté sur la validation, sa moyenne tomberait à 0 exactement : c'est la signature d'une fuite. `chambres` et `sdb` (entiers discrets) ne sont pas probants : leur médiane vaut 0 partout par construction.
+
+## Feature engineering (compétence 6)
+
+CV à 5 plis sur le **train seul** (1773 lignes), baseline `categorie` : R² = 0.7458. Une candidate à la fois, seuil ±0.01, graine 42.
+Les fuites sont créées volontairement pour constater le mirage : `prix_m2 + surface_log` atteint R² = 1.0000.
+
+| variable | type | base | r2_seul | r2_avec | gain | gain_foret | decision |
+|---|---|---|---|---|---|---|---|
+| region | existante | categorie | -0.0008 | 0.7502 | +0.0044 | -0.0020 | GARDER (neutre, sens métier fort) |
+| surface_log | existante | categorie | 0.1800 | 0.7448 | -0.0011 | -0.0428 | GARDER (neutre, sens métier fort) |
+| annee | existante | categorie | -0.0021 | 0.7454 | -0.0004 | -0.0064 | EXCLURE (neutre, sens métier faible) |
+| mois | existante | categorie | -0.0026 | 0.7450 | -0.0008 | -0.0144 | EXCLURE (neutre, sens métier faible) |
+| chambres_sdb | existante | categorie | 0.1186 | 0.7455 | -0.0003 | -0.0156 | EXCLURE (neutre, sens métier faible) |
+| distance_dakar_km | créée | categorie+region | -0.0040 | 0.7502 | -0.0000 | -0.0012 | EXCLUE (redondante) |
+| ville_frequence | créée | categorie+region | -0.0029 | 0.7501 | -0.0002 | -0.0081 | EXCLURE (neutre, sens métier faible) |
+| surface_x_categorie | créée | categorie | 0.6479 | 0.7431 | -0.0027 | -0.0432 | EXCLURE (neutre, sens métier faible) |
+| surface_par_chambre | créée | categorie | 0.0579 | 0.7451 | -0.0007 | -0.0497 | EXCLURE (neutre, sens métier faible) |
+| prix_m2 | fuite (test) | categorie | 0.2109 | 0.8810 | +0.1352 | +0.1275 | REJETÉE (fuite) |
+| prix_m2 + surface_log | fuite (test) | categorie | 0.9999 | 1.0000 | +0.2541 | +0.2448 | REJETÉE (fuite) |
+| ratio_prix_fourchette | fuite (test) | categorie | 0.2124 | 0.9750 | +0.2292 | +0.2532 | REJETÉE (fuite) |
+| est_hors_fourchette | fuite (test) | categorie | 0.0274 | 0.7675 | +0.0217 | +0.0207 | REJETÉE (fuite) |
+| source | audit | categorie | 0.0109 | 0.7444 | -0.0015 | -0.0024 | EXCLUE (principe) |
+| statut | audit | categorie | 0.0080 | 0.7441 | -0.0018 | -0.0049 | EXCLUE (principe) |
+
+**Features retenues : categorie, region, surface_log.** Dictionnaire complet : `reports/dictionnaire_features.csv`.
