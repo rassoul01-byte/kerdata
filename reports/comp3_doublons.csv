@@ -1,0 +1,5 @@
+type,nombre,decision
+exact (intra-source),15,"supprimé du corpus (mis en quarantaine, 1re occurrence conservée)"
+"ID dupliqué, contenu différent",0,conservé avec avertissement (arbitrage manuel)
+"probable inter-sources (même date, ville, catégorie, surface)",0,"signalé, jamais fusionné sans preuve"
+"conflit (même bien, prix à plus de 20 %)",0,signalé seulement

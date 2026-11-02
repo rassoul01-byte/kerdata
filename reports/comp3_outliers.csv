@@ -1,0 +1,41 @@
+source,champ,methode,nombre,decision
+agence,prix,fourchette du référentiel catégoriel,17,avertissement (plausible)
+agence,surface,fourchette typique du référentiel,0,avertissement
+agence,prix,"seuils atypiques (<100 k ou >2 Md, ventes)",0,avertissement
+agence,surface,seuils atypiques (<5 ou >2000 m²),0,avertissement
+agence,prix,prix <= 0,5,quarantaine
+agence,surface,surface <= 0,4,quarantaine
+agence,prix,IQR par catégorie sur log(prix) (confirmation),2,"confirmation seulement, aucune action"
+agence,prix,… dont hors fourchette du référentiel,0,recoupement des 2 méthodes
+historique,prix,fourchette du référentiel catégoriel,10,avertissement (plausible)
+historique,surface,fourchette typique du référentiel,0,avertissement
+historique,prix,"seuils atypiques (<100 k ou >2 Md, ventes)",0,avertissement
+historique,surface,seuils atypiques (<5 ou >2000 m²),0,avertissement
+historique,prix,prix <= 0,0,quarantaine
+historique,surface,surface <= 0,0,quarantaine
+historique,prix,IQR par catégorie sur log(prix) (confirmation),0,"confirmation seulement, aucune action"
+historique,prix,… dont hors fourchette du référentiel,0,recoupement des 2 méthodes
+notaires,prix,fourchette du référentiel catégoriel,16,avertissement (plausible)
+notaires,surface,fourchette typique du référentiel,0,avertissement
+notaires,prix,"seuils atypiques (<100 k ou >2 Md, ventes)",0,avertissement
+notaires,surface,seuils atypiques (<5 ou >2000 m²),0,avertissement
+notaires,prix,prix <= 0,0,quarantaine
+notaires,surface,surface <= 0,0,quarantaine
+notaires,prix,IQR par catégorie sur log(prix) (confirmation),0,"confirmation seulement, aucune action"
+notaires,prix,… dont hors fourchette du référentiel,0,recoupement des 2 méthodes
+particuliers,prix,fourchette du référentiel catégoriel,16,avertissement (plausible)
+particuliers,surface,fourchette typique du référentiel,0,avertissement
+particuliers,prix,"seuils atypiques (<100 k ou >2 Md, ventes)",0,avertissement
+particuliers,surface,seuils atypiques (<5 ou >2000 m²),0,avertissement
+particuliers,prix,prix <= 0,0,quarantaine
+particuliers,surface,surface <= 0,0,quarantaine
+particuliers,prix,IQR par catégorie sur log(prix) (confirmation),4,"confirmation seulement, aucune action"
+particuliers,prix,… dont hors fourchette du référentiel,0,recoupement des 2 méthodes
+plateforme,prix,fourchette du référentiel catégoriel,21,avertissement (plausible)
+plateforme,surface,fourchette typique du référentiel,3,avertissement
+plateforme,prix,"seuils atypiques (<100 k ou >2 Md, ventes)",0,avertissement
+plateforme,surface,seuils atypiques (<5 ou >2000 m²),0,avertissement
+plateforme,prix,prix <= 0,0,quarantaine
+plateforme,surface,surface <= 0,0,quarantaine
+plateforme,prix,IQR par catégorie sur log(prix) (confirmation),3,"confirmation seulement, aucune action"
+plateforme,prix,… dont hors fourchette du référentiel,1,recoupement des 2 méthodes

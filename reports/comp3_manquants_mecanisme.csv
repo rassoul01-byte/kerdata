@@ -1,0 +1,15 @@
+source,champ,vides,non_convertibles,pct_manquants_ou_illisibles,mecanisme,traitement
+agence,transaction,640,0,100.0,structurel (100 % absent dans la source),"imputée par seuil de prix (3 M FCFA), provenance tracée, SANS indicateur de manque (fuite type 4)"
+historique,transaction,528,0,100.0,structurel (100 % absent dans la source),"imputée par seuil de prix (3 M FCFA), provenance tracée, SANS indicateur de manque (fuite type 4)"
+historique,ville,8,0,1.5,aléatoire (MCAR plausible),conservée avec avertissement (région présente)
+historique,prix,0,10,1.9,aléatoire (MCAR plausible),"quarantaine (règle bloquante) : jamais imputé, c'est la cible"
+historique,statut,528,0,100.0,structurel (100 % absent dans la source),conservé vide : source qui ne le fournit pas ; pas d'indicateur de manque
+notaires,date,0,6,1.5,aléatoire (MCAR plausible),quarantaine (règle bloquante)
+notaires,transaction,410,0,100.0,structurel (100 % absent dans la source),"imputée par seuil de prix (3 M FCFA), provenance tracée, SANS indicateur de manque (fuite type 4)"
+notaires,prix,14,0,3.4,aléatoire (MCAR plausible),"quarantaine (règle bloquante) : jamais imputé, c'est la cible"
+notaires,sdb,410,0,100.0,structurel (100 % absent dans la source),"conservé vide ; imputation par groupe dans le pipeline (fit sur train, comp 5/7), sans indicateur de manque"
+particuliers,prix,61,2,8.6,aléatoire (MCAR plausible),"quarantaine (règle bloquante) : jamais imputé, c'est la cible"
+particuliers,surface,75,4,10.8,aléatoire (MCAR plausible),quarantaine (règle bloquante)
+plateforme,prix,0,6,0.7,aléatoire (MCAR plausible),"quarantaine (règle bloquante) : jamais imputé, c'est la cible"
+plateforme,surface,5,0,0.6,aléatoire (MCAR plausible),quarantaine (règle bloquante)
+plateforme,chambres,875,0,100.0,structurel (100 % absent dans la source),"conservé vide ; imputation par groupe dans le pipeline (fit sur train, comp 5/7), sans indicateur de manque"

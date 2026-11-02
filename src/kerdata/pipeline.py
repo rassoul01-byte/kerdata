@@ -1,0 +1,74 @@
+"""Pipeline de bout en bout : sources brutes -> nettoyage -> exports + rapport de qualité."""
+from __future__ import annotations
+
+import shutil
+from pathlib import Path
+
+import pandas as pd
+
+from .concat import concatener, controle_volumes
+from .nettoyage import COLONNES_FINALES, nettoyer
+from .qualite import (md_table, mesures, rapport_md, table_doublons, table_manquants,
+                      table_outliers, validation_transaction)
+
+
+def _sortie(d: pd.DataFrame, colonnes: list[str]) -> pd.DataFrame:
+    x = d[colonnes].copy()
+    for c in ("chambres", "sdb"):
+        x[c] = pd.to_numeric(x[c], errors="coerce").astype("Int64")
+    if "prix" in x:
+        x["prix"] = x["prix"].round(0).astype("Int64")
+    return x
+
+
+def _motifs(serie: pd.Series) -> pd.DataFrame:
+    from collections import Counter
+    c = Counter()
+    for t in serie[serie != ""]:
+        for m in t.split("; "):
+            m = m.split(" de ")[0] if m.startswith("doublon exact") else (m.split(" (")[0] if "inter-sources" in m else m)
+            c[m] += 1
+    return pd.DataFrame(sorted(c.items(), key=lambda kv: -kv[1]), columns=["motif", "lignes"])
+
+
+def executer(racine: Path = Path(".")) -> dict:
+    racine = Path(racine)
+    sortie, rep = racine / "sortie", racine / "reports"
+    sortie.mkdir(exist_ok=True); rep.mkdir(exist_ok=True)
+
+    brut = concatener(racine / "sources")
+    controle_volumes(brut).to_csv(rep / "volumes_etape0.csv", index=False)
+    brut.to_csv(sortie / "corpus_brut_concatene.csv", index=False, encoding="utf-8")
+
+    res = nettoyer(brut, racine / "referentiels")
+    d = res["d"].copy()
+    d["prix"], d["surface"] = d["prix_num"], d["surface_num"]
+    d["date"] = d["date_ts"].dt.strftime("%Y-%m-%d")
+
+    propres = d[d.classe == "propre"]
+    avert = d[d.classe == "avertissement"]
+    quar = d[d.classe == "quarantaine"]
+    _sortie(propres, COLONNES_FINALES).to_csv(sortie / "donnees_propres.csv", index=False, encoding="utf-8")
+    _sortie(avert, COLONNES_FINALES + ["corrections", "motifs_a"]).to_csv(sortie / "avertissements.csv", index=False, encoding="utf-8")
+    cols_q = COLONNES_FINALES + ["prix_brut", "surface_brut", "date_brut", "statut_brut", "motifs_q", "motifs_a"]
+    q = quar.copy(); q["date"] = q["date_brut"]
+    _sortie(q, cols_q).to_csv(sortie / "quarantine.csv", index=False, encoding="utf-8")
+    shutil.copyfile(sortie / "quarantine.csv", sortie / "quarantaine.csv")
+    conserve = d[d.classe != "quarantaine"].rename(columns={"classe": "classe_qualite"})
+    _sortie(conserve, COLONNES_FINALES + ["classe_qualite"]).to_csv(sortie / "corpus_conserve.csv", index=False, encoding="utf-8")
+    res["journal"].to_csv(sortie / "journal_corrections.csv", index=False, encoding="utf-8")
+    res["paires"].to_csv(rep / "comp3_doublons_probables_detail.csv", index=False)
+
+    tabs = dict(
+        manquants=table_manquants(brut), doublons=table_doublons(res), outliers=table_outliers(res),
+        motifs_q=_motifs(d.motifs_q), motifs_a=_motifs(d.motifs_a), validation_transaction=validation_transaction(d),
+    )
+    tabs["outliers_resume"] = (tabs["outliers"].groupby(["champ", "methode", "decision"], sort=False).nombre.sum().reset_index())
+    tabs["mesures"] = mesures(brut, res)
+    tabs["manquants"].to_csv(rep / "comp3_manquants_mecanisme.csv", index=False)
+    tabs["doublons"].to_csv(rep / "comp3_doublons.csv", index=False)
+    tabs["outliers"].to_csv(rep / "comp3_outliers.csv", index=False)
+    pd.Series(tabs["mesures"]).to_csv(rep / "comp3_mesures.csv", header=["valeur"])
+    (sortie / "rapport_qualite.md").write_text(rapport_md(brut, res, tabs), encoding="utf-8")
+    res.update(tabs=tabs, d_final=d)
+    return res

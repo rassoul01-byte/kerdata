@@ -1,0 +1,112 @@
+ligne_id,source,id,date,transaction,transaction_origine,categorie,region,ville,prix,surface,chambres,sdb,statut,corrections,motifs_a
+agence:0007,agence,AGT-00827,2021-04-19,vente,inférée_par_prix,Maison,Dakar,Rufisque,209108000,159.7,3,4,Vendu,1,prix hors fourchette du référentiel (plausible)
+agence:0023,agence,AGT-00843,2024-11-13,vente,inférée_par_prix,Villa,Saint-Louis,Saint-Louis,468742000,181.3,5,3,Vendu,0,prix hors fourchette du référentiel (plausible)
+agence:0126,agence,AGT-00946,2020-05-04,vente,inférée_par_prix,Appartement,Dakar,Rufisque,121992000,61.3,6,3,En vente,1,prix hors fourchette du référentiel (plausible)
+agence:0147,agence,AGT-00967,2023-05-07,vente,inférée_par_prix,Maison,Dakar,Rufisque,237871000,163.4,3,2,Vendu,0,prix hors fourchette du référentiel (plausible)
+agence:0215,agence,AGT-01035,2024-09-06,vente,inférée_par_prix,Studio,Dakar,Rufisque,59204000,22.0,5,4,Vendu,0,prix hors fourchette du référentiel (plausible)
+agence:0216,agence,AGT-01036,2019-08-16,vente,inférée_par_prix,Appartement,Saint-Louis,Saint-Louis,120545000,122.9,3,3,En vente,1,prix hors fourchette du référentiel (plausible)
+agence:0314,agence,AGT-01134,2025-02-12,vente,inférée_par_prix,Terrain,Dakar,Pikine,102508000,193.9,0,0,Vendu,0,prix hors fourchette du référentiel (plausible)
+agence:0365,agence,AGT-01185,2019-10-23,vente,inférée_par_prix,Maison,Thiès,Thiès,189862000,87.1,5,2,En vente,1,prix hors fourchette du référentiel (plausible)
+agence:0388,agence,AGT-01208,2025-07-01,vente,inférée_par_prix,Appartement,Dakar,Pikine,140532000,153.6,6,3,Vendu,0,prix hors fourchette du référentiel (plausible)
+agence:0425,agence,AGT-01245,2025-04-13,vente,inférée_par_prix,Studio,Dakar,Rufisque,49606000,56.5,4,4,Vendu,1,prix hors fourchette du référentiel (plausible)
+agence:0472,agence,AGT-01292,2020-08-10,vente,inférée_par_prix,Villa,Dakar,Pikine,536187000,372.3,2,3,En vente,0,prix hors fourchette du référentiel (plausible)
+agence:0528,agence,AGT-01348,2022-06-05,vente,inférée_par_prix,Appartement,Dakar,Rufisque,126607000,170.4,3,4,Vendu,0,prix hors fourchette du référentiel (plausible)
+agence:0546,agence,AGT-01366,2021-02-09,vente,inférée_par_prix,Studio,Dakar,Dakar,47669000,33.8,2,3,Vendu,1,prix hors fourchette du référentiel (plausible)
+agence:0563,agence,AGT-01383,2023-12-28,vente,inférée_par_prix,Studio,Thiès,Thiès,46212000,27.6,3,2,Vendu,1,prix hors fourchette du référentiel (plausible)
+agence:0570,agence,AGT-01390,2021-05-07,vente,inférée_par_prix,Maison,Saint-Louis,Saint-Louis,183518000,215.7,4,4,Vendu,0,prix hors fourchette du référentiel (plausible)
+agence:0577,agence,AGT-01397,2021-01-09,vente,inférée_par_prix,Appartement,Dakar,Dakar,135894000,144.8,6,3,Vendu,0,prix hors fourchette du référentiel (plausible)
+agence:0628,agence,AGT-01448,2022-11-07,vente,inférée_par_prix,Terrain,Dakar,Guédiawaye,117244000,711.7,0,0,Vendu,0,prix hors fourchette du référentiel (plausible)
+historique:0022,historique,HIS-0022,2018-10-02,vente,inférée_par_prix,Maison,Thiès,,116184000,152.4,1,2,,1,ville absente
+historique:0029,historique,HIS-0029,2019-09-10,vente,inférée_par_prix,Local commercial,Saint-Louis,Saint-Louis,207656000,87.7,0,2,,3,prix hors fourchette du référentiel (plausible)
+historique:0074,historique,HIS-0074,2019-10-11,vente,inférée_par_prix,Chambre,Thiès,,7798000,29.6,4,0,,3,ville absente
+historique:0097,historique,HIS-0097,2019-11-04,vente,inférée_par_prix,Studio,Thiès,Mbour,47469000,35.9,3,2,,3,prix hors fourchette du référentiel (plausible)
+historique:0105,historique,HIS-0105,2019-03-11,vente,inférée_par_prix,Local commercial,Thiès,Mbour,217182000,285.9,0,4,,3,prix hors fourchette du référentiel (plausible)
+historique:0107,historique,HIS-0107,2019-09-05,vente,inférée_par_prix,Maison,Dakar,Pikine,185155000,146.2,3,3,,1,prix hors fourchette du référentiel (plausible)
+historique:0130,historique,HIS-0130,2018-06-23,vente,inférée_par_prix,Maison,Kolda,,132094000,244.4,2,1,,1,ville absente
+historique:0140,historique,HIS-0140,2019-02-15,vente,inférée_par_prix,Chambre,Saint-Louis,,6308000,16.2,4,0,,1,ville absente
+historique:0142,historique,HIS-0142,2018-02-17,vente,inférée_par_prix,Local commercial,Kédougou,,78658000,159.6,0,3,,1,ville absente
+historique:0144,historique,HIS-0144,2018-04-24,vente,inférée_par_prix,Terrain,Dakar,,13351000,1353.4,0,0,,1,ville absente
+historique:0219,historique,HIS-0219,2019-05-23,vente,inférée_par_prix,Chambre,Kaffrine,,11949000,23.5,6,0,,0,ville absente
+historique:0237,historique,HIS-0237,2018-08-10,vente,inférée_par_prix,Appartement,Dakar,Guédiawaye,144178000,121.4,3,4,,2,prix hors fourchette du référentiel (plausible)
+historique:0240,historique,HIS-0240,2018-08-20,vente,inférée_par_prix,Terrain,Dakar,Pikine,109288000,705.4,0,0,,1,prix hors fourchette du référentiel (plausible)
+historique:0262,historique,HIS-0262,2018-08-24,vente,inférée_par_prix,Maison,Dakar,Guédiawaye,197933000,166.7,6,3,,2,prix hors fourchette du référentiel (plausible)
+historique:0267,historique,HIS-0267,2018-10-22,vente,inférée_par_prix,Appartement,Dakar,Rufisque,153991000,116.5,1,4,,1,prix hors fourchette du référentiel (plausible)
+historique:0330,historique,HIS-0330,2019-04-11,vente,inférée_par_prix,Appartement,Dakar,Rufisque,126021000,160.4,2,2,,2,prix hors fourchette du référentiel (plausible)
+historique:0421,historique,HIS-0421,2019-08-19,vente,inférée_par_prix,Villa,Diourbel,,373110000,396.7,5,3,,0,ville absente
+historique:0499,historique,HIS-0499,2019-10-08,vente,inférée_par_prix,Local commercial,Thiès,Mbour,210826000,45.8,0,2,,2,prix hors fourchette du référentiel (plausible)
+notaires:0019,notaires,NOT-02210,2025-12-25,vente,inférée_par_prix,Villa,Dakar,Pikine,521391000,439.4,2,,Vendu,0,prix hors fourchette du référentiel (plausible)
+notaires:0044,notaires,NOT-02235,2023-12-15,vente,inférée_par_prix,Appartement,Dakar,Guédiawaye,132098000,81.2,1,,Vendu,0,prix hors fourchette du référentiel (plausible)
+notaires:0081,notaires,NOT-02272,2020-02-13,vente,inférée_par_prix,Villa,Dakar,Dakar,497845000,186.4,2,,Vendu,0,prix hors fourchette du référentiel (plausible)
+notaires:0090,notaires,NOT-02281,2021-05-08,vente,inférée_par_prix,Villa,Dakar,Rufisque,471218000,443.7,1,,Vendu,1,prix hors fourchette du référentiel (plausible)
+notaires:0120,notaires,NOT-02311,2021-12-30,vente,inférée_par_prix,Villa,Dakar,Dakar,567559000,209.3,6,,Vendu,0,prix hors fourchette du référentiel (plausible)
+notaires:0151,notaires,NOT-02342,2024-08-15,vente,inférée_par_prix,Villa,Dakar,Rufisque,560980000,313.8,6,,Vendu,1,prix hors fourchette du référentiel (plausible)
+notaires:0175,notaires,NOT-02366,2023-03-01,vente,inférée_par_prix,Villa,Dakar,Rufisque,539769000,222.1,4,,Vendu,1,prix hors fourchette du référentiel (plausible)
+notaires:0202,notaires,NOT-02393,2021-05-13,vente,inférée_par_prix,Maison,Thiès,Mbour,189032000,60.7,6,,Vendu,0,prix hors fourchette du référentiel (plausible)
+notaires:0217,notaires,NOT-02408,2020-10-05,vente,inférée_par_prix,Villa,Dakar,Dakar,560426000,441.8,2,,Vendu,0,prix hors fourchette du référentiel (plausible)
+notaires:0264,notaires,NOT-02455,2025-03-26,vente,inférée_par_prix,Maison,Thiès,Mbour,183579000,180.4,4,,Vendu,1,prix hors fourchette du référentiel (plausible)
+notaires:0295,notaires,NOT-02486,2018-11-02,vente,inférée_par_prix,Studio,Dakar,Pikine,56778000,44.6,6,,Vendu,0,prix hors fourchette du référentiel (plausible)
+notaires:0307,notaires,NOT-02498,2018-12-04,vente,inférée_par_prix,Maison,Dakar,Dakar,216995000,187.9,2,,Vendu,0,prix hors fourchette du référentiel (plausible)
+notaires:0346,notaires,NOT-02537,2019-08-13,vente,inférée_par_prix,Villa,Dakar,Dakar,481452000,301.7,1,,Vendu,1,prix hors fourchette du référentiel (plausible)
+notaires:0366,notaires,NOT-02557,2020-09-07,vente,inférée_par_prix,Appartement,Thiès,Thiès,121510000,168.0,2,,Vendu,0,prix hors fourchette du référentiel (plausible)
+notaires:0385,notaires,NOT-02576,2021-10-10,vente,inférée_par_prix,Villa,Dakar,Pikine,525368000,134.4,2,,Vendu,0,prix hors fourchette du référentiel (plausible)
+notaires:0408,notaires,NOT-02599,2024-11-07,vente,inférée_par_prix,Appartement,Dakar,Pikine,133102000,80.8,1,,Vendu,0,prix hors fourchette du référentiel (plausible)
+particuliers:0015,particuliers,PRT-01475,2022-10-07,vente,source,Appartement,Dakar,Rufisque,141365000,119.3,6,4,Vendu,1,prix hors fourchette du référentiel (plausible)
+particuliers:0023,particuliers,PRT-01483,2020-02-28,vente,source,Local commercial,Dakar,Dakar,227714000,195.3,0,2,En vente,1,prix hors fourchette du référentiel (plausible)
+particuliers:0155,particuliers,PRT-01615,2022-05-08,vente,source,Appartement,Dakar,Dakar,144605000,106.7,5,3,Vendu,0,prix hors fourchette du référentiel (plausible)
+particuliers:0173,particuliers,PRT-01633,2022-07-20,vente,source,Appartement,Saint-Louis,Saint-Louis,130759000,110.5,4,3,À confirmer,0,prix hors fourchette du référentiel (plausible)
+particuliers:0237,particuliers,PRT-01697,2023-03-29,vente,source,Studio,Dakar,Rufisque,59263000,37.7,1,1,Vendu,1,prix hors fourchette du référentiel (plausible)
+particuliers:0254,particuliers,PRT-01714,2020-02-15,vente,source,Appartement,Ziguinchor,Dakar,27884000,158.9,6,2,En vente,1,région et ville incompatibles (non corrigé)
+particuliers:0275,particuliers,PRT-01735,2023-10-18,vente,source,Villa,Dakar,Dakar,490740000,220.4,2,1,À confirmer,1,prix hors fourchette du référentiel (plausible)
+particuliers:0292,particuliers,PRT-01752,2022-02-28,vente,source,Appartement,Dakar,Pikine,145033000,140.5,3,1,En vente,0,prix hors fourchette du référentiel (plausible)
+particuliers:0321,particuliers,PRT-01781,2025-05-06,vente,source,Appartement,Dakar,Guédiawaye,153109000,48.3,5,1,À confirmer,1,prix hors fourchette du référentiel (plausible)
+particuliers:0419,particuliers,PRT-01879,2020-10-10,location,source,Terrain,Ziguinchor,Dakar,75000,1188.6,0,0,Disponible,1,région et ville incompatibles (non corrigé)
+particuliers:0469,particuliers,PRT-01929,2022-05-18,vente,source,Appartement,Dakar,Dakar,128147000,88.2,5,3,Vendu,0,prix hors fourchette du référentiel (plausible)
+particuliers:0472,particuliers,PRT-01932,2025-09-18,vente,source,Maison,Dakar,Dakar,216337000,137.3,3,3,Vendu,1,prix hors fourchette du référentiel (plausible)
+particuliers:0494,particuliers,PRT-01954,2021-03-23,vente,source,Villa,Thiès,Thiès,460341000,230.7,5,3,En vente,1,prix hors fourchette du référentiel (plausible)
+particuliers:0505,particuliers,PRT-01965,2018-02-12,vente,source,Appartement,Dakar,Dakar,160022000,135.0,5,4,En vente,1,prix hors fourchette du référentiel (plausible)
+particuliers:0534,particuliers,PRT-01994,2019-01-28,vente,source,Villa,Dakar,Guédiawaye,510157000,400.5,5,1,Vendu,1,prix hors fourchette du référentiel (plausible)
+particuliers:0539,particuliers,PRT-01999,2020-01-12,vente,source,Appartement,Ziguinchor,Dakar,86289000,47.3,2,1,Vendu,1,région et ville incompatibles (non corrigé)
+particuliers:0551,particuliers,PRT-02011,2021-04-09,vente,source,Appartement,Dakar,Dakar,145635000,127.8,5,1,Vendu,0,prix hors fourchette du référentiel (plausible)
+particuliers:0668,particuliers,PRT-02128,2025-07-20,vente,source,Terrain,Ziguinchor,Dakar,38071000,230.2,0,0,En vente,1,région et ville incompatibles (non corrigé)
+particuliers:0690,particuliers,PRT-02150,2025-07-10,vente,source,Terrain,Dakar,Guédiawaye,104069000,791.2,0,0,En vente,0,prix hors fourchette du référentiel (plausible)
+particuliers:0708,particuliers,PRT-02168,2020-12-19,vente,source,Local commercial,Dakar,Pikine,206786000,121.0,0,4,En vente,1,prix hors fourchette du référentiel (plausible)
+plateforme:0001,plateforme,PLT-00021,2023-12-16,vente,source,Villa,Dakar,Dakar,551163000,275.8,,1,Vendu,0,prix hors fourchette du référentiel (plausible)
+plateforme:0003,plateforme,PLT-00046,2025-04-23,vente,source,Appartement,Dakar,Guédiawaye,147520000,150.3,,2,Vendu,1,prix hors fourchette du référentiel (plausible)
+plateforme:0006,plateforme,PLT-00092,2019-03-19,vente,source,Terrain,Dakar,Rufisque,105826000,689.2,,0,Vendu,0,prix hors fourchette du référentiel (plausible)
+plateforme:0008,plateforme,PLT-00120,2020-08-23,vente,source,Appartement,Dakar,Rufisque,132373000,172.5,,3,Vendu,0,prix hors fourchette du référentiel (plausible)
+plateforme:0017,plateforme,PLT-00265,2021-01-05,vente,source,Chambre,Dakar,Guédiawaye,23651000,16.8,,0,En vente,0,prix hors fourchette du référentiel (plausible)
+plateforme:0019,plateforme,PLT-00277,2019-12-11,vente,source,Villa,Dakar,Dakar,539747000,276.2,,2,En vente,0,prix hors fourchette du référentiel (plausible)
+plateforme:0021,plateforme,PLT-00306,2021-04-10,vente,source,Studio,Dakar,Guédiawaye,48860000,25.3,,1,Vendu,1,prix hors fourchette du référentiel (plausible)
+plateforme:0024,plateforme,PLT-00342,2019-10-22,vente,source,Appartement,Dakar,Pikine,125596000,81.8,,1,Vendu,0,prix hors fourchette du référentiel (plausible)
+plateforme:0029,plateforme,PLT-00464,2019-11-18,vente,source,Maison,Dakar,Guédiawaye,208177000,132.3,,3,Vendu,0,prix hors fourchette du référentiel (plausible)
+plateforme:0030,plateforme,PLT-00468,2023-01-01,vente,source,Appartement,Dakar,Rufisque,143683000,167.3,,3,Vendu,0,prix hors fourchette du référentiel (plausible)
+plateforme:0031,plateforme,PLT-00480,2019-12-07,vente,source,Appartement,Dakar,Pikine,116227000,219.9,,1,En vente,1,surface hors fourchette typique de la catégorie
+plateforme:0032,plateforme,PLT-00493,2023-04-12,vente,source,Local commercial,Dakar,Rufisque,230846000,113.2,,1,En vente,0,prix hors fourchette du référentiel (plausible)
+plateforme:0034,plateforme,PLT-00513,2019-12-18,vente,source,Maison,Dakar,Rufisque,229641000,135.4,,2,En vente,0,prix hors fourchette du référentiel (plausible)
+plateforme:0045,plateforme,PLT-00634,2024-12-15,vente,source,Studio,Dakar,Rufisque,45453000,29.6,,1,En vente,0,prix hors fourchette du référentiel (plausible)
+plateforme:0046,plateforme,PLT-00636,2025-04-23,vente,source,Studio,Dakar,Pikine,58543000,43.3,,2,En vente,0,prix hors fourchette du référentiel (plausible)
+plateforme:0052,plateforme,PLT-00735,2019-03-30,vente,source,Terrain,Dakar,Guédiawaye,117965000,174.5,,0,Vendu,1,prix hors fourchette du référentiel (plausible)
+plateforme:0054,plateforme,PLT-00779,2020-11-03,location,source,Appartement,Dakar,Rufisque,235000,126.9,,4,En vente,0,statut incohérent avec la transaction
+plateforme:0055,plateforme,PLT-00783,2019-09-26,vente,source,Maison,Dakar,Pikine,238173000,215.2,,4,Sous offre,0,prix hors fourchette du référentiel (plausible)
+plateforme:0057,plateforme,PLT-00797,2021-01-01,vente,source,Maison,Dakar,Guédiawaye,211701000,248.0,,3,Sous offre,0,prix hors fourchette du référentiel (plausible)
+plateforme:0087,plateforme,PLT-00193,2022-05-15,vente,source,Villa,Diourbel,Bambey,450000000,1250.0,,1,Vendu,0,surface hors fourchette typique de la catégorie
+plateforme:0107,plateforme,PLT-00362,2019-06-10,vente,source,Appartement,Diourbel,Mbacké,17785000,47.6,,4,Vendu,1,prix hors fourchette du référentiel (plausible)
+plateforme:0149,plateforme,PLT-00788,2023-11-01,location,source,Appartement,Diourbel,Diourbel,255000,62.5,,2,En vente,0,statut incohérent avec la transaction
+plateforme:0160,plateforme,PLT-00064,2022-01-13,location,source,Maison,Fatick,Gossas,720000,233.5,,4,En vente,0,statut incohérent avec la transaction
+plateforme:0188,plateforme,PLT-00395,2028-12-01,vente,source,Terrain,Fatick,Kaolack-Fatick,64427000,701.4,,0,En vente,0,date future (non vendue)
+plateforme:0233,plateforme,PLT-00082,2025-05-27,location,source,Appartement,Kaffrine,Kaffrine,375000,160.6,,3,En vente,0,statut incohérent avec la transaction
+plateforme:0236,plateforme,PLT-00134,2024-12-28,location,source,Villa,Kaffrine,Kaffrine,595000,149.3,,3,En vente,0,statut incohérent avec la transaction
+plateforme:0244,plateforme,PLT-00241,2025-02-20,location,source,Chambre,Kaffrine,Koungheul,45000,10.4,,0,En vente,0,statut incohérent avec la transaction
+plateforme:0268,plateforme,PLT-00572,2028-12-01,vente,source,Maison,Kaffrine,Kaffrine,68696000,113.4,,4,En vente,0,date future (non vendue)
+plateforme:0297,plateforme,PLT-00272,2021-02-06,location,source,Studio,Kaolack,Nioro du Rip,90000,47.2,,2,En vente,0,statut incohérent avec la transaction
+plateforme:0392,plateforme,PLT-00014,2028-12-01,vente,source,Maison,Kolda,Médina Yoro Foulah,91358000,111.6,,3,Retiré,0,date future (non vendue)
+plateforme:0473,plateforme,PLT-00338,2020-06-12,location,source,Terrain,Louga,Kébémer,255000,1099.7,,0,En vente,0,statut incohérent avec la transaction
+plateforme:0514,plateforme,PLT-00029,2021-10-27,location,source,Appartement,Matam,Kanel,255000,102.7,,4,En vente,0,statut incohérent avec la transaction
+plateforme:0560,plateforme,PLT-00656,2024-05-20,location,source,Maison,Matam,Kanel,695000,192.5,,4,En vente,0,statut incohérent avec la transaction
+plateforme:0579,plateforme,PLT-00115,2021-04-26,vente,source,Local commercial,Saint-Louis,Saint-Louis,203343000,253.9,,1,En vente,0,prix hors fourchette du référentiel (plausible)
+plateforme:0712,plateforme,PLT-00245,2020-05-07,location,source,Appartement,Tambacounda,Bakel,425000,114.2,,2,En vente,0,statut incohérent avec la transaction
+plateforme:0726,plateforme,PLT-00478,2025-01-14,location,source,Villa,Tambacounda,Bakel,510000,199.2,,1,En vente,0,statut incohérent avec la transaction
+plateforme:0789,plateforme,PLT-00501,2018-11-12,vente,source,Studio,Thiès,Thiès,45107000,42.9,,1,Vendu,0,prix hors fourchette du référentiel (plausible)
+plateforme:0804,plateforme,PLT-00753,2028-12-01,vente,source,Terrain,Thiès,Joal-Fadiouth,25935000,925.3,,0,En vente,0,date future (non vendue)
+plateforme:0808,plateforme,PLT-00796,2023-12-07,location,source,Terrain,Thiès,Mbour,245000,1304.3,,0,En vente,0,statut incohérent avec la transaction
+plateforme:0859,plateforme,PLT-00663,2018-10-01,vente,source,Appartement,Ziguinchor,Bignona,340802000,389.7,,2,En vente,1,prix hors fourchette du référentiel (plausible); surface hors fourchette typique de la catégorie

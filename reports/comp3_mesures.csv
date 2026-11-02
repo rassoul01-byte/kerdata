@@ -1,0 +1,16 @@
+,valeur
+n,3184
+classes,"{'propre': 2872, 'quarantaine': 201, 'avertissement': 111}"
+manquants_pct,"{'id': 0.0, 'date': 0.0, 'transaction': 49.6, 'categorie': 0.0, 'region': 0.0, 'ville': 0.3, 'prix': 2.4, 'surface': 2.5, 'chambres': 27.5, 'sdb': 12.9, 'statut': 16.6}"
+doublons_exacts,15
+doublons_probables,0
+conflits,0
+erreurs_conversion,"{'prix': 18, 'surface': 4, 'date': 6}"
+lignes_corrigees,1407
+corrections_total,1740
+quarantaine,201
+avertissements,111
+propres,2872
+taux_conformes_emblee,50.7
+taux_propres,90.2
+taux_conserves,93.7
