@@ -1,0 +1,13 @@
+ajustement,variable,moyenne_train,moyenne_val,mediane_train,mediane_val,train_centre,val_centre_exactement
+fit sur train (correct),annee,-0.0,-0.003044,0.036382,-0.379777,True,False
+fit sur train (correct),surface_log,-0.036316,-0.05478,0.0,-0.061328,True,False
+fit sur train (correct),chambres,-0.037225,-0.050877,0.0,0.0,True,True
+fit sur train (correct),sdb,-0.023548,-0.026974,0.0,0.0,True,True
+fit sur validation (fuite simulée),annee,0.003088,-0.0,0.039991,-0.382132,False,True
+fit sur validation (fuite simulée),surface_log,0.023193,0.006072,0.056867,0.0,False,True
+fit sur validation (fuite simulée),chambres,-0.082158,-0.096491,0.0,0.0,True,True
+fit sur validation (fuite simulée),sdb,-0.031303,-0.034211,0.0,0.0,True,True
+fit sur train+val (fit global),annee,0.000539,-0.002513,0.037011,-0.380182,False,False
+fit sur train+val (fit global),surface_log,-0.03019,-0.0486,0.006022,-0.05513,False,False
+fit sur train+val (fit global),chambres,-0.037225,-0.050877,0.0,0.0,True,True
+fit sur train+val (fit global),sdb,-0.013818,-0.017105,0.0,0.0,True,True

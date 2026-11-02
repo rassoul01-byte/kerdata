@@ -137,3 +137,32 @@ def main(racine: Path = Path(".")) -> dict:
 if __name__ == "__main__":
     pd.set_option("display.width", 250, "display.max_colwidth", 120)
     print(main()["tableau"][["variable", "encodage_ou_scaler"]].to_string(index=False))
+
+
+# ---------------------------------------------------------------------------
+# Preuve de non-fuite : fit sur train seulement
+# ---------------------------------------------------------------------------
+def preuve_non_fuite(conserve: pd.DataFrame, split: pd.DataFrame) -> pd.DataFrame:
+    """Compare 3 façons d'ajuster le préprocesseur : train seul (correct), validation seule et jeu entier (fuites simulées)."""
+    from .preprocess import COLONNES_ENTREE, construire_preprocesseur, transformer
+
+    v = conserve[conserve.transaction == "vente"].merge(split, on="ligne_id")
+    tr, va = v[v.ensemble == "train"], v[v.ensemble == "val"]
+    cols = ["annee", "surface_log", "chambres", "sdb"]
+    lignes = []
+    for nom, jeu in (("fit sur train (correct)", tr), ("fit sur validation (fuite simulée)", va), ("fit sur train+val (fit global)", pd.concat([tr, va]))):
+        pre = construire_preprocesseur().fit(jeu[COLONNES_ENTREE])
+        Xt, Xv = transformer(pre, tr), transformer(pre, va)
+        for c in cols:
+            lignes.append(dict(ajustement=nom, variable=c, moyenne_train=Xt[c].mean(), moyenne_val=Xv[c].mean(),
+                               mediane_train=Xt[c].median(), mediane_val=Xv[c].median()))
+    out = pd.DataFrame(lignes)
+    out["train_centre"] = np.where(out.variable == "annee", out.moyenne_train.abs() < 1e-9, out.mediane_train.abs() < 1e-9)
+    out["val_centre_exactement"] = np.where(out.variable == "annee", out.moyenne_val.abs() < 1e-9, out.mediane_val.abs() < 1e-9)
+    return out
+
+
+def main_preuve(racine: Path = Path(".")) -> pd.DataFrame:
+    p = preuve_non_fuite(pd.read_csv(racine / "sortie" / "corpus_conserve.csv"), pd.read_csv(racine / "sortie" / "split.csv"))
+    p.round(6).to_csv(racine / "reports" / "comp5_preuve_non_fuite.csv", index=False)
+    return p
