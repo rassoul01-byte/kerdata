@@ -71,4 +71,10 @@ def executer(racine: Path = Path(".")) -> dict:
     pd.Series(tabs["mesures"]).to_csv(rep / "comp3_mesures.csv", header=["valeur"])
     (sortie / "rapport_qualite.md").write_text(rapport_md(brut, res, tabs), encoding="utf-8")
     res.update(tabs=tabs, d_final=d)
+
+    from .viz import restitution  # restitution : relit les fichiers livrés, aucun retraitement
+    c = restitution(res, racine)
+    with open(sortie / "rapport_qualite.md", "a", encoding="utf-8") as fh:
+        fh.write("\n" + c["markdown"])
+    res["restitution"] = c
     return res
