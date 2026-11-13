@@ -1,0 +1,8 @@
+categorie,train,val,test
+Appartement,414,87,89
+Chambre,109,24,24
+Local commercial,100,22,22
+Maison,375,81,80
+Studio,211,46,45
+Terrain,251,53,53
+Villa,313,67,68

@@ -1,0 +1,4 @@
+ensemble,count,pourcentage,cible_ratio
+train,1773,69.97,70%
+val,380,15.0,15%
+test,381,15.04,15%

@@ -1,0 +1,7 @@
+prerequis,verifie
+corpus issu de la comp 3 (aucune ligne en quarantaine dans le corpus conservé),True
+doublons exacts supprimés (aucun couple source+id répété),True
+vocabulaire des catégories aligné sur le référentiel (7 modalités),True
+features sélectionnées en comp 6 disponibles,True
+`source` absente des features retenues,True
+"aucune colonne de fuite (prix_m2, ratio, hors_fourchette) dans les features retenues",True

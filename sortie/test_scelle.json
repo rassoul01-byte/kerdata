@@ -1,0 +1,9 @@
+{
+  "n_lignes": 381,
+  "sha256_ligne_ids": "92a1f45006f5131665209be5a1e2e168f62d4760ec2c8add5dab7502a081a93e",
+  "sha256_contenu": "416abcd763c5978ed8efc1f3770ee63f81b4bf4d529dfc8c39b0d9716befeccc",
+  "graine": 42,
+  "scelle_le": "2026-11-13",
+  "utilisable_a_partir": "compétence 9 (évaluation finale unique)",
+  "declaration": "Jeu de test scellé : interdit pour toute décision (features, seuils, hyperparamètres, modèle) avant la compétence 9."
+}

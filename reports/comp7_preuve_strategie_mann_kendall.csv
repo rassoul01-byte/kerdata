@@ -1,0 +1,4 @@
+echelle,n_points,tau,p_value,decision
+annuelle,8,0.0,1.0,pas de tendance → split aléatoire
+mensuelle,96,-0.0241,0.7277,pas de tendance → split aléatoire
+par vente,2530,-0.0034,0.8006,pas de tendance → split aléatoire
