@@ -93,4 +93,8 @@ def executer(racine: Path = Path("."), etapes_longues: bool = True) -> dict:
         res["comp6"] = comp6.main(racine)
         with open(sortie / "rapport_qualite.md", "a", encoding="utf-8") as fh:
             fh.write("\n" + comp6.markdown(res["comp6"]["tab"], res["comp6"]["retenues"], res["comp6"]["n_train"]))
+        from . import comp7                  # compétence 7 : preuves du split et scellé du test (après les features de comp 6)
+        res["comp7"] = comp7.main(racine)
+        with open(sortie / "rapport_qualite.md", "a", encoding="utf-8") as fh:
+            fh.write("\n" + comp7.markdown(res["comp7"]))
     return res

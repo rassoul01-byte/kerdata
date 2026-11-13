@@ -90,3 +90,5 @@ def test_pipeline_complet_avec_comp6_dans_le_rapport(tmp_path_factory):
     t = (tmp / "sortie" / "rapport_qualite.md").read_text(encoding="utf-8")
     assert "Feature engineering (compétence 6)" in t and "prix_m2 + surface_log" in t
     assert (tmp / "reports" / "dictionnaire_features.csv").exists() and (tmp / "reports" / "features_retenues.json").exists()
+    assert res["comp7"]["scelle_intact"] and res["comp7"]["prerequis"].verifie.all()
+    assert "Jeu de test scellé" in t and (tmp / "sortie" / "test_scelle.json").exists()

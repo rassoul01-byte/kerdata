@@ -247,3 +247,46 @@ Les fuites sont créées volontairement pour constater le mirage : `prix_m2 + su
 | statut | audit | categorie | 0.0080 | 0.7441 | -0.0018 | -0.0049 | EXCLUE (principe) |
 
 **Features retenues : categorie, region, surface_log.** Dictionnaire complet : `reports/dictionnaire_features.csv`.
+
+## Découpage train / validation / test (compétence 7)
+
+Split **aléatoire** stratifié sur `categorie + source`, ratios 70/15/15, graine 42 (voir `src/kerdata/split.py`).
+
+| ensemble | count | pourcentage | cible_ratio |
+|---|---|---|---|
+| train | 1773 | 69.97 | 70% |
+| val | 380 | 15.0 | 15% |
+| test | 381 | 15.04 | 15% |
+
+**Preuve de la stratégie** (Mann-Kendall sur le prix relatif à la catégorie, ventes datées ≤ 2026-10-31) :
+
+| echelle | n_points | tau | p_value | decision |
+|---|---|---|---|---|
+| annuelle | 8 | 0.0 | 1.0 | pas de tendance → split aléatoire |
+| mensuelle | 96 | -0.0241 | 0.7277 | pas de tendance → split aléatoire |
+| par vente | 2530 | -0.0034 | 0.8006 | pas de tendance → split aléatoire |
+
+**Prérequis vérifiés par le code :**
+
+| prerequis | verifie |
+|---|---|
+| corpus issu de la comp 3 (aucune ligne en quarantaine dans le corpus conservé) | True |
+| doublons exacts supprimés (aucun couple source+id répété) | True |
+| vocabulaire des catégories aligné sur le référentiel (7 modalités) | True |
+| features sélectionnées en comp 6 disponibles | True |
+| `source` absente des features retenues | True |
+| aucune colonne de fuite (prix_m2, ratio, hors_fourchette) dans les features retenues | True |
+
+**Absence de fuite entre ensembles :**
+
+| controle | nombre | attendu |
+|---|---|---|
+| (source, id) présents dans plusieurs ensembles | 0 | 0 |
+| ligne_id présents dans plusieurs ensembles | 0 | 0 |
+| lignes sans ensemble (non affectées) | 0 | 0 |
+| même bien (date, ville, catégorie, surface) à cheval sur plusieurs ensembles | 0 | 0 |
+
+Effectifs par catégorie : train/val/test tous ≥ 22 lignes.
+
+**Jeu de test scellé le 2026-11-13** (381 lignes ; SHA-256 de l'appartenance `92a1f45006f51316…`, du contenu `416abcd763c5978e…`).
+Jeu de test scellé : interdit pour toute décision (features, seuils, hyperparamètres, modèle) avant la compétence 9. Intégrité vérifiée à chaque exécution : **intact**.

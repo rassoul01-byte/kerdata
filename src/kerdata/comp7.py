@@ -133,3 +133,27 @@ if __name__ == "__main__":
     for k in ("ensembles", "prerequis", "ids", "strategie", "periodes", "eff_cat"):
         print(f"--- {k}"); print(r[k].to_string(index=k == "eff_cat"))
     print("--- scellé :", r["scelle"], "| intact :", r["scelle_intact"])
+
+
+def markdown(r: dict) -> str:
+    from .qualite import md_table
+    s = r["scelle"]
+    return f"""## Découpage train / validation / test (compétence 7)
+
+Split **aléatoire** stratifié sur `categorie + source`, ratios 70/15/15, graine {s['graine']} (voir `src/kerdata/split.py`).
+
+{md_table(r['ensembles'])}
+**Preuve de la stratégie** (Mann-Kendall sur le prix relatif à la catégorie, ventes datées ≤ 2026-10-31) :
+
+{md_table(r['strategie'])}
+**Prérequis vérifiés par le code :**
+
+{md_table(r['prerequis'])}
+**Absence de fuite entre ensembles :**
+
+{md_table(r['ids'])}
+Effectifs par catégorie : train/val/test tous ≥ {int(r['eff_cat'].values.min())} lignes.
+
+**Jeu de test scellé le {s['scelle_le']}** ({s['n_lignes']} lignes ; SHA-256 de l'appartenance `{s['sha256_ligne_ids'][:16]}…`, du contenu `{s['sha256_contenu'][:16]}…`).
+{s['declaration']} Intégrité vérifiée à chaque exécution : **{'intact' if r['scelle_intact'] else 'ALTÉRÉ'}**.
+"""

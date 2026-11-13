@@ -31,7 +31,7 @@ temps.eta2_mois,0.004537211601630596
 temps.p_annee,0.07741838025472453
 temps.p_mois,0.4032242896768909
 num.skew_surface,2.4927702452408735
-num.skew_log1p_surface,0.03672604523016186
+num.skew_log1p_surface,0.03672604523016183
 num.prix_min,5156000.0
 num.surface_min,10.2
 num.surface_max,1494.8
