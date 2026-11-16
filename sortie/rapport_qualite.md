@@ -290,3 +290,100 @@ Effectifs par catégorie : train/val/test tous ≥ 22 lignes.
 
 **Jeu de test scellé le 2026-11-13** (381 lignes ; SHA-256 de l'appartenance `92a1f45006f51316…`, du contenu `416abcd763c5978e…`).
 Jeu de test scellé : interdit pour toute décision (features, seuils, hyperparamètres, modèle) avant la compétence 9. Intégrité vérifiée à chaque exécution : **intact**.
+
+## Audit anti-fuite (compétence 8)
+
+Question unique : cette information serait-elle disponible au moment où l'annonce est publiée ? Features finales : **categorie, region, surface_log**.
+
+### Tableau d'audit {feature, type de fuite potentiel, statut, justification}
+
+| feature | type_de_fuite_potentiel | statut | justification |
+|---|---|---|---|
+| categorie | — | OK | connue à la mise en ligne ; ne contient pas `prix` ; source quasi indétectable (AUC 0.56) ; vocabulaire aligné AVANT le split par le référentiel (déterministe) |
+| region | — | OK | connue à la mise en ligne ; ne contient pas `prix` ; AUC source 0.48 (≈ hasard) |
+| surface_log | type 3 évité | OK | log déterministe, RobustScaler ajusté sur le train seul ; AUC source 0.50 (≈ hasard) |
+| ENSEMBLE des features finales | types 1, 2, 3, 4 | OK | AUC source 0.543 pour 0,5 au hasard ; précision 0.273 contre 0.267 de baseline |
+| prix_m2 | type 1 (contient `prix`) | exclue | R² avec la feature = 0.8810 (gain +0.1351) ; mirage détecté en comp 6 |
+| prix_m2 + surface_log | type 1 (contient `prix`) | exclue | R² avec la feature = 1.0000 (gain +0.2541) ; mirage détecté en comp 6 |
+| ratio_prix_fourchette | type 1 (contient `prix`) | exclue | R² avec la feature = 0.9750 (gain +0.2292) ; mirage détecté en comp 6 |
+| est_hors_fourchette | type 1 (contient `prix`) | exclue | R² avec la feature = 0.7675 (gain +0.0217) ; mirage détecté en comp 6 |
+| log_prix comme feature | type 1 (c'est la cible) | exclue | refusé par construction : `cible()` assert prix > 0 et aucune feature ne le reprend |
+| statut | type 2 (postérieur à la prédiction) + type 4 | exclue | Vendu/Vente conclue/Acte signé/Loué ne sont connus qu'après la vente ou la location ; gain -0.0018 ; reste utilisé au nettoyage (date future + vendu → quarantaine) |
+| date brute | types 2 et 4 (sémantique variable) | exclue | date de mise en ligne (plateforme) mais date d'acte ou de vente (notaires, historique : noms d'origine date_acte, DateVente) donc postérieure à l'événement ; 4 ventes datées du futur conservées en avertissement, sans effet car la date n'est dans aucune feature finale |
+| annee + mois | type 4 (révèlent la source par la période) | exclue | AUC source 0.65, précision 0.41 (historique : 2018-2020 seulement) ; gain -0.0004 déjà nul |
+| source (one-hot) | type 4 | exclue | identifiant de flux ; gain -0.0015 (la fiche attendait ≥ +0,05 : non observé, donc pas d'artefact de prix, mais exclue par principe) |
+| transaction_origine | type 4 | exclue | fonction déterministe de la source (V de Cramér = 1,00, comp 5) |
+| indicateurs de manque (chambres_vide, sdb_vide) | type 4 | jamais créés | à eux deux AUC source = 0.86 : l'indicateur EST la source |
+| chambres + sdb (imputées) | type 4 (manque structurel) | exclue | manque entièrement concentré sur une source (chambres vides à 100 % : plateforme ; sdb : notaires) ; imputées sans indicateur ; gain -0.0003 |
+| quartier | type 4 (colonne mono-source) | exclue (retirée du corpus final) | vide à 72 % ; renseignée seulement dans plateforme (100 %) ; V manque/source = 1.00 : sa présence EST la source ; absente des 4 fichiers de sortie |
+| description | type 4 (colonne mono-source) | exclue (retirée du corpus final) | vide à 78 % ; renseignée seulement dans plateforme (81 %) ; V manque/source = 0.87 : sa présence EST la source ; absente des 4 fichiers de sortie |
+| date_expiration | type 4 (colonne mono-source) | exclue (retirée du corpus final) | vide à 72 % ; renseignée seulement dans plateforme (100 %) ; V manque/source = 1.00 : sa présence EST la source ; absente des 4 fichiers de sortie |
+| pieces | type 4 (colonne mono-source) | exclue (retirée du corpus final) | vide à 72 % ; renseignée seulement dans plateforme (100 %) ; V manque/source = 1.00 : sa présence EST la source ; absente des 4 fichiers de sortie |
+| commercial | type 4 (colonne mono-source) | exclue (retirée du corpus final) | vide à 80 % ; renseignée seulement dans agence (100 %) ; V manque/source = 1.00 : sa présence EST la source ; absente des 4 fichiers de sortie |
+| devise | — (redondante) | exclue (retirée du corpus final) | FCFA / FCFA par mois = la `transaction` déjà connue ; seule la plateforme la fournit |
+| id, ligne_id | type 4 (identifiants) | exclue | identifiants de flux (préfixes PLT-, etc.), aucune information sur le bien |
+| ville | — | exclue | redondante avec la région, gain nul (comp 5/6) ; pas une fuite |
+
+### Preuve de détection (fuite type 1)
+
+`prix_m2` seul : R² = 0.8810 (gain +0.1351) ; `prix_m2 + surface_log` : **R² = 1.0000** (log prix = log prix_m2 + log surface) ; `ratio_prix_fourchette` : R² = 0.9750. Le score du modèle final (features sans fuite) est plausible :
+
+| modele | r2_cv_train | seuil_suspect | verdict |
+|---|---|---|---|
+| Ridge | 0.7491 | 0.95 | plausible (< 0,95) |
+| forêt aléatoire | 0.7246 | 0.95 | plausible (< 0,95) |
+
+La règle `garde_score` du code interrompt tout calcul dont le R² dépasse 0,95.
+
+### Les features révèlent-elles la source ? (fuite type 4)
+
+On entraîne un classifieur à deviner `source` à partir des features (CV 5 plis sur le train ; AUC macro 0,5 = hasard) :
+
+| ensemble_de_features | auc_macro | precision | precision_baseline | verdict |
+|---|---|---|---|---|
+| features finales (categorie + region + surface_log) | 0.5429 | 0.273 | 0.2673 | source indétectable : OK |
+| categorie seule | 0.5605 | 0.2893 | 0.2673 | source indétectable : OK |
+| region seule | 0.4839 | 0.2346 | 0.2673 | source indétectable : OK |
+| surface_log seule | 0.5019 | 0.2758 | 0.2673 | source indétectable : OK |
+| annee + mois (candidates exclues) | 0.649 | 0.4089 | 0.2673 | RÉVÈLE LA SOURCE |
+| chambres + sdb imputées | 0.5489 | 0.2831 | 0.2673 | source indétectable : OK |
+| indicateur chambres_vide (jamais créés) | 0.7301 | 0.4743 | 0.2673 | RÉVÈLE LA SOURCE |
+| indicateur sdb_vide (jamais créés) | 0.6776 | 0.4219 | 0.2673 | RÉVÈLE LA SOURCE |
+| 2 indicateurs de manque (jamais créés) | 0.8564 | 0.6289 | 0.2673 | RÉVÈLE LA SOURCE |
+
+Les features finales ne permettent pas de deviner la source (AUC 0.543, précision 0.273 contre 0.267 de baseline). `annee + mois` et tout indicateur de manque la révèlent : ils ne sont pas utilisés.
+
+### Manque et colonnes mono-source vs `source`
+
+| colonne | pct_vide_global | sources_100pct_vides | sources_renseignees | v_cramer_manque_vs_source | indicateur_autorise |
+|---|---|---|---|---|---|
+| chambres | 28.5 | plateforme | agence (100 %), historique (100 %), notaires (100 %), particuliers (100 %) | 1.0 | NON : l'indicateur serait la source |
+| sdb | 13.1 | notaires | agence (100 %), historique (100 %), particuliers (100 %), plateforme (100 %) | 1.0 | NON : l'indicateur serait la source |
+| statut | 17.4 | historique | agence (100 %), notaires (100 %), particuliers (100 %), plateforme (100 %) | 1.0 | NON : l'indicateur serait la source |
+| ville | 0.3 | aucune | agence (100 %), historique (98 %), notaires (100 %), particuliers (100 %), plateforme (100 %) | 0.113 | à examiner |
+| quartier | 72.5 | agence, historique, notaires, particuliers | plateforme (100 %) | 1.0 | NON : l'indicateur serait la source |
+| description | 77.7 | agence, historique, notaires, particuliers | plateforme (81 %) | 0.87 | NON : l'indicateur serait la source |
+| date_expiration | 72.5 | agence, historique, notaires, particuliers | plateforme (100 %) | 1.0 | NON : l'indicateur serait la source |
+| pieces | 72.5 | agence, historique, notaires, particuliers | plateforme (100 %) | 1.0 | NON : l'indicateur serait la source |
+| commercial | 79.9 | historique, notaires, particuliers, plateforme | agence (100 %) | 1.0 | NON : l'indicateur serait la source |
+| devise | 72.5 | agence, historique, notaires, particuliers | plateforme (100 %) | 1.0 | NON : l'indicateur serait la source |
+
+Colonnes mono-source présentes dans les fichiers de sortie :
+
+| fichier | colonnes_mono_source_presentes |
+|---|---|
+| donnees_propres.csv | aucune |
+| avertissements.csv | aucune |
+| quarantine.csv | aucune |
+| corpus_conserve.csv | aucune |
+
+### Transformations ajustées sur le train seul (fuite type 3)
+
+Un espion placé en tête du pipeline enregistre les lignes vues par `fit` : **1773 lignes vues, 1773 du train, 0 de validation ou de test.** Preuve statistique : voir la section Encodage et normalisation (moyenne de `annee` = 0 sur le train, ≠ 0 sur la validation).
+
+### Décisions documentées
+
+- **`statut` : exclu de la modélisation** (fuite type 2, et type 4 : V(source, statut) = 1,00 sur les valeurs vides). Il reste utile au nettoyage (date future + `Vendu` → quarantaine) et au reporting.
+- **`source` : exclue** (type 4). Mesurée : gain -0.0015 (la fiche attendait +0,05 ou plus : pas d'artefact de prix observé), exclue quand même par principe.
+- **Colonnes mono-source** (`quartier`, `description`, `date_expiration`, `pieces`, `commercial`, `devise`) : retirées des 4 fichiers de sortie, conservées uniquement dans l'intermédiaire brut `corpus_brut_concatene.csv` pour la traçabilité.
+- **Limites reconnues :** 4 ventes datées de 2028 sont conservées en avertissement (leur date n'entre dans aucune feature) ; le seuil de 3 M FCFA qui sépare ventes et locations a été observé sur tout le corpus avant le split (règle métier fixe, pas un paramètre appris, mais choisie en voyant les données).

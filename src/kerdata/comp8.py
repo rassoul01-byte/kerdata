@@ -202,3 +202,50 @@ if __name__ == "__main__":
     r = main()
     print(r["det"].to_string(index=False)); print(r["mq"].to_string(index=False)); print(r["mono"].to_string(index=False))
     print(r["score"].to_string(index=False)); print(r["fit"]); print(r["audit"][["feature", "type_de_fuite_potentiel", "statut"]].to_string(index=False))
+
+
+def markdown(r: dict, racine: Path) -> str:
+    from .qualite import md_table
+    cand = pd.read_csv(racine / "reports" / "comp6_candidates.csv").set_index("variable")
+    d = r["det"].set_index("ensemble_de_features")
+    pf = cand.loc["prix_m2 + surface_log"]
+    f = r["fit"]
+    audit = r["audit"].copy()
+    return f"""## Audit anti-fuite (compétence 8)
+
+Question unique : cette information serait-elle disponible au moment où l'annonce est publiée ? Features finales : **{", ".join(r['finales'])}**.
+
+### Tableau d'audit {{feature, type de fuite potentiel, statut, justification}}
+
+{md_table(audit)}
+### Preuve de détection (fuite type 1)
+
+`prix_m2` seul : R² = {cand.loc['prix_m2', 'r2_avec']:.4f} (gain {cand.loc['prix_m2', 'gain']:+.4f}) ; `prix_m2 + surface_log` : **R² = {pf.r2_avec:.4f}** (log prix = log prix_m2 + log surface) ; `ratio_prix_fourchette` : R² = {cand.loc['ratio_prix_fourchette', 'r2_avec']:.4f}. Le score du modèle final (features sans fuite) est plausible :
+
+{md_table(r['score'])}
+La règle `garde_score` du code interrompt tout calcul dont le R² dépasse 0,95.
+
+### Les features révèlent-elles la source ? (fuite type 4)
+
+On entraîne un classifieur à deviner `source` à partir des features (CV 5 plis sur le train ; AUC macro 0,5 = hasard) :
+
+{md_table(r['det'])}
+Les features finales ne permettent pas de deviner la source (AUC {d.iloc[0].auc_macro:.3f}, précision {d.iloc[0].precision:.3f} contre {d.iloc[0].precision_baseline:.3f} de baseline). `annee + mois` et tout indicateur de manque la révèlent : ils ne sont pas utilisés.
+
+### Manque et colonnes mono-source vs `source`
+
+{md_table(r['mq'])}
+Colonnes mono-source présentes dans les fichiers de sortie :
+
+{md_table(r['mono'])}
+### Transformations ajustées sur le train seul (fuite type 3)
+
+Un espion placé en tête du pipeline enregistre les lignes vues par `fit` : **{f['lignes_vues_au_fit']} lignes vues, {f['dont_train']} du train, {f['dont_val_ou_test']} de validation ou de test.** Preuve statistique : voir la section Encodage et normalisation (moyenne de `annee` = 0 sur le train, ≠ 0 sur la validation).
+
+### Décisions documentées
+
+- **`statut` : exclu de la modélisation** (fuite type 2, et type 4 : V(source, statut) = 1,00 sur les valeurs vides). Il reste utile au nettoyage (date future + `Vendu` → quarantaine) et au reporting.
+- **`source` : exclue** (type 4). Mesurée : gain {cand.loc['source', 'gain']:+.4f} (la fiche attendait +0,05 ou plus : pas d'artefact de prix observé), exclue quand même par principe.
+- **Colonnes mono-source** (`quartier`, `description`, `date_expiration`, `pieces`, `commercial`, `devise`) : retirées des 4 fichiers de sortie, conservées uniquement dans l'intermédiaire brut `corpus_brut_concatene.csv` pour la traçabilité.
+- **Limites reconnues :** {r['n_future']} ventes datées de 2028 sont conservées en avertissement (leur date n'entre dans aucune feature) ; le seuil de 3 M FCFA qui sépare ventes et locations a été observé sur tout le corpus avant le split (règle métier fixe, pas un paramètre appris, mais choisie en voyant les données).
+"""

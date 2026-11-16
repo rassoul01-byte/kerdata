@@ -92,3 +92,5 @@ def test_pipeline_complet_avec_comp6_dans_le_rapport(tmp_path_factory):
     assert (tmp / "reports" / "dictionnaire_features.csv").exists() and (tmp / "reports" / "features_retenues.json").exists()
     assert res["comp7"]["scelle_intact"] and res["comp7"]["prerequis"].verifie.all()
     assert "Jeu de test scellé" in t and (tmp / "sortie" / "test_scelle.json").exists()
+    assert "Audit anti-fuite (compétence 8)" in t and "Preuve de détection" in t and "`statut` : exclu" in t
+    assert res["comp8"]["fit"]["dont_val_ou_test"] == 0 and (tmp / "reports" / "comp8_audit_features.csv").exists()

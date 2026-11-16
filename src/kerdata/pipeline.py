@@ -97,4 +97,8 @@ def executer(racine: Path = Path("."), etapes_longues: bool = True) -> dict:
         res["comp7"] = comp7.main(racine)
         with open(sortie / "rapport_qualite.md", "a", encoding="utf-8") as fh:
             fh.write("\n" + comp7.markdown(res["comp7"]))
+        from . import comp8                  # compétence 8 : audit anti-fuite (après le split et les features)
+        res["comp8"] = comp8.main(racine)
+        with open(sortie / "rapport_qualite.md", "a", encoding="utf-8") as fh:
+            fh.write("\n" + comp8.markdown(res["comp8"], racine))
     return res
