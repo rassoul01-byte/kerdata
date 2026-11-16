@@ -1,0 +1,25 @@
+feature,type_de_fuite_potentiel,statut,justification
+categorie,—,OK,connue à la mise en ligne ; ne contient pas `prix` ; source quasi indétectable (AUC 0.56) ; vocabulaire aligné AVANT le split par le référentiel (déterministe)
+region,—,OK,connue à la mise en ligne ; ne contient pas `prix` ; AUC source 0.48 (≈ hasard)
+surface_log,type 3 évité,OK,"log déterministe, RobustScaler ajusté sur le train seul ; AUC source 0.50 (≈ hasard)"
+ENSEMBLE des features finales,"types 1, 2, 3, 4",OK,"AUC source 0.543 pour 0,5 au hasard ; précision 0.273 contre 0.267 de baseline"
+prix_m2,type 1 (contient `prix`),exclue,R² avec la feature = 0.8810 (gain +0.1351) ; mirage détecté en comp 6
+prix_m2 + surface_log,type 1 (contient `prix`),exclue,R² avec la feature = 1.0000 (gain +0.2541) ; mirage détecté en comp 6
+ratio_prix_fourchette,type 1 (contient `prix`),exclue,R² avec la feature = 0.9750 (gain +0.2292) ; mirage détecté en comp 6
+est_hors_fourchette,type 1 (contient `prix`),exclue,R² avec la feature = 0.7675 (gain +0.0217) ; mirage détecté en comp 6
+log_prix comme feature,type 1 (c'est la cible),exclue,refusé par construction : `cible()` assert prix > 0 et aucune feature ne le reprend
+statut,type 2 (postérieur à la prédiction) + type 4,exclue,Vendu/Vente conclue/Acte signé/Loué ne sont connus qu'après la vente ou la location ; gain -0.0018 ; reste utilisé au nettoyage (date future + vendu → quarantaine)
+date brute,types 2 et 4 (sémantique variable),exclue,"date de mise en ligne (plateforme) mais date d'acte ou de vente (notaires, historique : noms d'origine date_acte, DateVente) donc postérieure à l'événement ; 4 ventes datées du futur conservées en avertissement, sans effet car la date n'est dans aucune feature finale"
+annee + mois,type 4 (révèlent la source par la période),exclue,"AUC source 0.65, précision 0.41 (historique : 2018-2020 seulement) ; gain -0.0004 déjà nul"
+source (one-hot),type 4,exclue,"identifiant de flux ; gain -0.0015 (la fiche attendait ≥ +0,05 : non observé, donc pas d'artefact de prix, mais exclue par principe)"
+transaction_origine,type 4,exclue,"fonction déterministe de la source (V de Cramér = 1,00, comp 5)"
+"indicateurs de manque (chambres_vide, sdb_vide)",type 4,jamais créés,à eux deux AUC source = 0.86 : l'indicateur EST la source
+chambres + sdb (imputées),type 4 (manque structurel),exclue,manque entièrement concentré sur une source (chambres vides à 100 % : plateforme ; sdb : notaires) ; imputées sans indicateur ; gain -0.0003
+quartier,type 4 (colonne mono-source),exclue (retirée du corpus final),vide à 72 % ; renseignée seulement dans plateforme (100 %) ; V manque/source = 1.00 : sa présence EST la source ; absente des 4 fichiers de sortie
+description,type 4 (colonne mono-source),exclue (retirée du corpus final),vide à 78 % ; renseignée seulement dans plateforme (81 %) ; V manque/source = 0.87 : sa présence EST la source ; absente des 4 fichiers de sortie
+date_expiration,type 4 (colonne mono-source),exclue (retirée du corpus final),vide à 72 % ; renseignée seulement dans plateforme (100 %) ; V manque/source = 1.00 : sa présence EST la source ; absente des 4 fichiers de sortie
+pieces,type 4 (colonne mono-source),exclue (retirée du corpus final),vide à 72 % ; renseignée seulement dans plateforme (100 %) ; V manque/source = 1.00 : sa présence EST la source ; absente des 4 fichiers de sortie
+commercial,type 4 (colonne mono-source),exclue (retirée du corpus final),vide à 80 % ; renseignée seulement dans agence (100 %) ; V manque/source = 1.00 : sa présence EST la source ; absente des 4 fichiers de sortie
+devise,— (redondante),exclue (retirée du corpus final),FCFA / FCFA par mois = la `transaction` déjà connue ; seule la plateforme la fournit
+"id, ligne_id",type 4 (identifiants),exclue,"identifiants de flux (préfixes PLT-, etc.), aucune information sur le bien"
+ville,—,exclue,"redondante avec la région, gain nul (comp 5/6) ; pas une fuite"

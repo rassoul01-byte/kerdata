@@ -1,0 +1,10 @@
+ensemble_de_features,auc_macro,precision,precision_baseline,verdict
+features finales (categorie + region + surface_log),0.5429,0.273,0.2673,source indétectable : OK
+categorie seule,0.5605,0.2893,0.2673,source indétectable : OK
+region seule,0.4839,0.2346,0.2673,source indétectable : OK
+surface_log seule,0.5019,0.2758,0.2673,source indétectable : OK
+annee + mois (candidates exclues),0.649,0.4089,0.2673,RÉVÈLE LA SOURCE
+chambres + sdb imputées,0.5489,0.2831,0.2673,source indétectable : OK
+indicateur chambres_vide (jamais créés),0.7301,0.4743,0.2673,RÉVÈLE LA SOURCE
+indicateur sdb_vide (jamais créés),0.6776,0.4219,0.2673,RÉVÈLE LA SOURCE
+2 indicateurs de manque (jamais créés),0.8564,0.6289,0.2673,RÉVÈLE LA SOURCE

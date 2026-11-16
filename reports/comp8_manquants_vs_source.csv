@@ -1,0 +1,11 @@
+colonne,pct_vide_global,sources_100pct_vides,sources_renseignees,v_cramer_manque_vs_source,indicateur_autorise
+chambres,28.5,plateforme,"agence (100 %), historique (100 %), notaires (100 %), particuliers (100 %)",1.0,NON : l'indicateur serait la source
+sdb,13.1,notaires,"agence (100 %), historique (100 %), particuliers (100 %), plateforme (100 %)",1.0,NON : l'indicateur serait la source
+statut,17.4,historique,"agence (100 %), notaires (100 %), particuliers (100 %), plateforme (100 %)",1.0,NON : l'indicateur serait la source
+ville,0.3,aucune,"agence (100 %), historique (98 %), notaires (100 %), particuliers (100 %), plateforme (100 %)",0.113,à examiner
+quartier,72.5,"agence, historique, notaires, particuliers",plateforme (100 %),1.0,NON : l'indicateur serait la source
+description,77.7,"agence, historique, notaires, particuliers",plateforme (81 %),0.87,NON : l'indicateur serait la source
+date_expiration,72.5,"agence, historique, notaires, particuliers",plateforme (100 %),1.0,NON : l'indicateur serait la source
+pieces,72.5,"agence, historique, notaires, particuliers",plateforme (100 %),1.0,NON : l'indicateur serait la source
+commercial,79.9,"historique, notaires, particuliers, plateforme",agence (100 %),1.0,NON : l'indicateur serait la source
+devise,72.5,"agence, historique, notaires, particuliers",plateforme (100 %),1.0,NON : l'indicateur serait la source
