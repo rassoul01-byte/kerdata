@@ -1,0 +1,5 @@
+controle,valeur,ok
+colonnes lues par le pipeline,"categorie, region, surface",True
+`source` ou colonne mono-source utilisée,aucune,True
+modalités de catégorie / région couvertes pour les 5 sources,100.0 % / 100.0 % minimum,True
+sources évaluées,"agence, historique, notaires, particuliers, plateforme",True

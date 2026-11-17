@@ -1,0 +1,4 @@
+echantillon,n,ecart_maximal_fcfa,predictions_identiques
+validation,60,0.0,True
+test (caractéristiques seules),60,0.0,True
+fichier models/pipeline_preparation.joblib,0,0.0,True

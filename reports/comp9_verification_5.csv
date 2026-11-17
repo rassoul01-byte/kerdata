@@ -1,0 +1,11 @@
+cas,entree,prediction_fcfa,ok
+1 ligne brute de agence,"{'categorie': 'Studio', 'region': 'Fatick', 'surface': '35.7'}",27218524,True
+1 ligne brute de historique,"{'categorie': 'Studio', 'region': 'Thi�s', 'surface': '24.2'}",27331226,True
+1 ligne brute de notaires,"{'categorie': 'Villa', 'region': 'Sédhiou', 'surface': '392.1'}",234541592,True
+1 ligne brute de particuliers,"{'categorie': 'Studio', 'region': 'Fatick', 'surface': 50.0}",27389961,True
+1 ligne brute de plateforme,"{'categorie': 'Villa', 'region': 'Dakar', 'surface': '275.8'}",318358404,True
+modalités inconnues (handle_unknown=ignore),"{'categorie': 'Château', 'region': 'Atlantide', 'surface': '120'}",57413987,True
+une ligne seule == la même ligne dans un lot (aucun état collectif),25 lignes de validation,0,True
+surface invalide '',Villa / Dakar,0,True
+surface invalide 'quatre-vingt',Villa / Dakar,0,True
+surface invalide '-5',Villa / Dakar,0,True

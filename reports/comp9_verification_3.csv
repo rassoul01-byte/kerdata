@@ -1,0 +1,4 @@
+controle,exec_1,exec_2,identique
+empreinte des coefficients (exécution 1 / 2),1bc3b7192d92c61e,1bc3b7192d92c61e,True
+empreinte des prédictions de validation,f4e52970237eb708,f4e52970237eb708,True
+graine du split (comp 7),42,42,True

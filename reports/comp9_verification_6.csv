@@ -1,0 +1,6 @@
+source,n_val,r2_log,mdape_pct,categories_connues_pct,regions_connues_pct
+agence,79,0.701,31.5,100.0,100.0
+historique,77,0.75,35.3,100.0,100.0
+notaires,58,0.751,37.1,100.0,100.0
+particuliers,63,0.749,29.4,100.0,100.0
+plateforme,103,0.715,36.0,100.0,100.0

@@ -1,0 +1,24 @@
+{
+  "alpha": 1.0,
+  "n_train": 1773,
+  "val": {
+    "n": 380,
+    "r2_log": 0.7380336148811522,
+    "rmse_log": 0.47444627736046463,
+    "mdape_pct": 34.0535473467548,
+    "mae_fcfa": 38399015.86502414
+  },
+  "graine": 42,
+  "sklearn": "1.9.1",
+  "python": "3.12.3",
+  "blocs": [
+    "categorie",
+    "region",
+    "surface_log"
+  ],
+  "entrees": [
+    "categorie",
+    "region",
+    "surface"
+  ]
+}

@@ -1,0 +1,5 @@
+test,observation,verdict
+encodage sans normalisation préalable (sur le train brut),"15 modalités de catégorie au lieu de 7 et 17 de région au lieu de 14 : colonnes parasites (variantes de casse, mojibake) ; 0 lignes de validation tombent à zéro car les mêmes variantes existent déjà dans le train",fragmentation des modalités : normaliser AVANT d'encoder
+variante jamais vue « Appt » (synonyme d'Appartement),"sans normalisation : somme du one-hot de catégorie = 0 (annonce sans catégorie, silencieux) ; avec normalisation : 1",la normalisation protège la production contre les variantes de saisie
+log1p + scaler sur la surface brute (texte) sans normalisation,"plante : TypeError (surface en texte, virgule décimale)",convertir la surface AVANT de la transformer
+log1p puis scaler (ordre retenu) vs scaler puis log1p (inversé),l'ordre inversé produit 0 NaN sur 1773 lignes ; écart médian absolu entre les deux = 0.027,"ne plante pas ici mais change les valeurs : on garde l'ordre standard (symétriser d'abord, centrer-réduire ensuite)"
