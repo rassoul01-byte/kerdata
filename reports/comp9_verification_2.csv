@@ -1,6 +1,6 @@
 parametre,appris_par_le_pipeline,train_seul,train_plus_val,correspond_au_train
-médiane de log1p(surface) (centre du RobustScaler),5.001930853466109,5.001930853466109,4.994505912166372,True
-IQR de log1p(surface) (échelle du RobustScaler),1.2295037945371377,1.2295037945371377,1.2330627990043954,True
-modalités de catégorie apprises,7.0,7.0,7.0,True
-modalités de région apprises,14.0,14.0,14.0,True
-lignes vues par le Ridge (n_features_in_ × lignes train),22.0,1773.0,2153.0,True
+médiane de log1p(surface) (centre du RobustScaler),5.00193,5.00193,4.99451,True
+IQR de log1p(surface) (échelle du RobustScaler),1.2295,1.2295,1.23306,True
+modalités de catégorie apprises,7,7,7,True
+modalités de région apprises,14,14,14,True
+colonnes apprises par le Ridge (7 catégories + 14 régions + 1 surface),22,22,22,True

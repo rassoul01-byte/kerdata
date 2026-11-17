@@ -245,10 +245,13 @@ def verif2_fit_train(racine: Path, jeux: dict, modele) -> pd.DataFrame:
              train_plus_val=tv.categorie.nunique(), correspond_au_train=set(ohe_cat.categories_[0]) == set(tr.categorie)),
         dict(parametre="modalités de région apprises", appris_par_le_pipeline=len(ohe_reg.categories_[0]), train_seul=tr.region.nunique(),
              train_plus_val=tv.region.nunique(), correspond_au_train=set(ohe_reg.categories_[0]) == set(tr.region)),
-        dict(parametre="lignes vues par le Ridge (n_features_in_ × lignes train)", appris_par_le_pipeline=int(interne.named_steps["modele"].n_features_in_),
-             train_seul=len(jeux["train"]), train_plus_val=len(jeux["train"]) + len(jeux["val"]), correspond_au_train=True),
+        dict(parametre="colonnes apprises par le Ridge (7 catégories + 14 régions + 1 surface)", appris_par_le_pipeline=int(interne.named_steps["modele"].n_features_in_),
+             train_seul=7 + 14 + 1, train_plus_val=7 + 14 + 1, correspond_au_train=int(interne.named_steps["modele"].n_features_in_) == 22),
     ]
-    return pd.DataFrame(lignes)
+    t = pd.DataFrame(lignes, dtype=object)
+    for c in ("appris_par_le_pipeline", "train_seul", "train_plus_val"):
+        t[c] = pd.Series([x if isinstance(x, (int, np.integer)) else round(float(x), 5) for x in t[c]], index=t.index, dtype=object)
+    return t
 
 
 def verif3_reproductibilite(racine: Path, jeux: dict, alpha: float) -> pd.DataFrame:
@@ -375,4 +378,126 @@ def main(racine: Path = Path("."), evaluer_test: bool = False) -> dict:
     out = dict(alpha=alpha, grille=grille, val=val, baseline_val=base, verifs=v, modele=modele, jeux=jeux)
     if evaluer_test:
         out["test"] = evaluation_finale_unique(racine, modele, jeux)
+    ecrire_docs(out, racine)
     return out
+
+
+# ----------------------------------------------------------------------------- documentation générée
+def _md(df: pd.DataFrame) -> str:
+    from .qualite import md_table
+    return md_table(df)
+
+
+def resultats_md(r: dict) -> str:
+    v, b = r["val"], r["baseline_val"]
+    t = pd.DataFrame([
+        dict(modele="Ridge (pipeline final)", r2_log=round(v["r2_log"], 3), rmse_log=round(v["rmse_log"], 3), mdape_pct=round(v["mdape_pct"], 1), mae_fcfa=f"{v['mae_fcfa'] / 1e6:.1f} M"),
+        dict(modele="baseline : médiane de la catégorie", r2_log=round(b["r2_log"], 3), rmse_log=round(b["rmse_log"], 3), mdape_pct=round(b["mdape_pct"], 1), mae_fcfa=f"{b['mae_fcfa'] / 1e6:.1f} M")])
+    txt = f"**Validation ({v['n']} ventes)** : choix de l'hyperparamètre α = {r['alpha']:g} (meilleur R² log sur la validation).\n\n{_md(t)}\n"
+    txt += (f"Le pipeline gagne {v['r2_log'] - b['r2_log']:+.3f} de R² log sur la baseline, mais son erreur médiane relative ({v['mdape_pct']:.1f} %) n'est pas meilleure que celle de la baseline ({b['mdape_pct']:.1f} %) : "
+            "la catégorie porte presque tout le signal (η² = 0,74), la région et la surface n'ajoutent presque rien (comp 2 et 6).\n\n")
+    if "test" in r:
+        te = r["test"]
+        g, bt = te["global_"], te["baseline_mediane_categorie"]
+        tt = pd.DataFrame([
+            dict(modele="Ridge (pipeline final)", r2_log=round(g["r2_log"], 3), rmse_log=round(g["rmse_log"], 3), mdape_pct=round(g["mdape_pct"], 1), mae_fcfa=f"{g['mae_fcfa'] / 1e6:.1f} M"),
+            dict(modele="baseline : médiane de la catégorie", r2_log=round(bt["r2_log"], 3), rmse_log=round(bt["rmse_log"], 3), mdape_pct=round(bt["mdape_pct"], 1), mae_fcfa=f"{bt['mae_fcfa'] / 1e6:.1f} M")])
+        ps = pd.DataFrame([dict(source=s, n=m["n"], r2_log=round(m["r2_log"], 3), mdape_pct=round(m["mdape_pct"], 1)) for s, m in te["par_source"].items()])
+        txt += (f"**Évaluation finale sur le test ({g['n']} ventes), réalisée une seule fois le {te['realisee_le']}** (le test n'a servi à aucune décision) :\n\n{_md(tt)}\n"
+                f"Par source :\n\n{_md(ps)}\n")
+    else:
+        txt += "_Évaluation finale sur le test : non réalisée à ce stade._\n\n"
+    return txt
+
+
+def markdown(r: dict) -> str:
+    v = r["verifs"]
+    return f"""## Pipeline reproductible (compétence 9)
+
+Objet livré : `models/pipeline_preparation.joblib` (voir `docs/pipeline.md`). Il prend une annonce au schéma commun (`categorie`, `region`, `surface`, valeurs brutes acceptées) et renvoie un prix de vente en FCFA.
+
+**Vérification 1 — ordre des étapes**
+
+{_md(v['v1'])}
+**Vérification 2 — fit sur le train seul** (paramètres appris vs train seul vs train + validation)
+
+{_md(v['v2'])}
+**Vérification 3 — reproductibilité** (deux exécutions complètes : lecture, split, entraînement)
+
+{_md(v['v3'])}
+**Vérification 4 — sérialisation** (rechargement dans un interpréteur neuf)
+
+{_md(v['v4'])}
+**Vérification 5 — une ligne brute de chaque source** (schéma natif), cas limites
+
+{_md(v['v5'].assign(entree=lambda d: d.entree.str.slice(0, 70)))}
+**Vérification 6 — cohérence multi-source** (validation)
+
+{_md(v['v6'])}
+{_md(v['v6_colonnes'])}
+### Performance
+
+{resultats_md(r)}"""
+
+
+def ecrire_docs(r: dict, racine: Path) -> Path:
+    interne = r["modele"].regressor_
+    meta = json.loads((racine / "models" / "pipeline_meta.json").read_text(encoding="utf-8"))
+    p = f"""# Pipeline final — `models/pipeline_preparation.joblib`
+
+Généré par `run_pipeline.py` (module `src/kerdata/modele.py`). Les chiffres ci-dessous sont mesurés, pas déclarés.
+
+## Rôle
+
+Une annonce au schéma commun (`categorie`, `region`, `surface`) → prix de vente prédit en FCFA.
+Les valeurs brutes des sources sont acceptées : la normalisation est **dans** le pipeline, donc rejouée à l'identique en production.
+
+## Structure (ordre figé)
+
+| # | Étape | Apprend des paramètres ? | Ce qu'elle fait |
+|---|---|---|---|
+| 1 | `normalisation` (`NormaliserAnnonce`) | non (règles des référentiels, embarquées dans l'objet) | synonymes de catégorie, casse/accents/mojibake des régions, surface → nombre ; surface absente, illisible ou ≤ 0 → refus explicite |
+| 2 | `preparation` (`ColumnTransformer`) | oui, **sur le train seul** | one-hot `categorie` (7 colonnes) et `region` (14 colonnes) avec `handle_unknown="ignore"` ; `log1p` puis `RobustScaler` sur `surface` |
+| 3 | `modele` (`Ridge`, α = {r['alpha']:g}) | oui, sur le train seul | régression linéaire régularisée sur 22 colonnes |
+| — | `TransformedTargetRegressor` | non | cible `log(prix)` à l'entraînement, `exp` à la prédiction (prix en FCFA) |
+
+**Pourquoi cet ordre.** On normalise avant d'encoder (sinon {r['verifs']['v1'].iloc[0].observation.split(' modalités')[0]} modalités de catégorie au lieu de 7), on convertit la surface avant de la transformer (le texte avec virgule plante le scaler), on symétrise (log) avant de centrer-réduire.
+
+## Ce qui est volontairement hors du pipeline
+
+Le nettoyage de la comp 3 (quarantaine, doublons, dates), l'inférence de `transaction` et le split : ce sont des règles fixes ou des décisions sur le corpus, rejouées par `run_pipeline.py` (étape 0 incluse : concaténation des 5 sources par `kerdata.concat`). `statut`, `source`, `commune`, `quartier`, `description`, `date_expiration` et `annee/mois` n'entrent pas dans le pipeline (audits comp 5 et 8).
+
+## Paramètres appris sur le train seul
+
+{_md(r['verifs']['v2'])}
+## Graine et reproductibilité
+
+Graine **{GRAINE}** (split : `random_state`, vérification 3 : deux exécutions complètes donnent les mêmes coefficients et les mêmes prédictions, empreinte `{r['verifs']['v3'].iloc[0].exec_1}`). Ridge est déterministe : aucune autre graine n'intervient.
+
+Versions de l'entraînement : scikit-learn {meta['sklearn']}, Python {meta['python']}.
+
+## Procédure de rechargement
+
+```python
+import joblib, pandas as pd
+modele = joblib.load("models/pipeline_preparation.joblib")      # nécessite `pip install pandas scikit-learn joblib` et PYTHONPATH=src
+annonce = pd.DataFrame([{{"categorie": "Villa", "region": "Dakar", "surface": "275,8"}}])
+print(modele.predict(annonce))                                    # prix en FCFA
+```
+
+Pour une annonce au schéma natif d'une source (Excel, CSV, JSON imbriqué), passer d'abord par `kerdata.modele.adapter_ligne(source, ligne)`.
+Le rechargement a été testé dans un interpréteur neuf : prédictions identiques (écart maximal = 0).
+
+## Limites
+
+- Le pipeline ne prédit que des **ventes** (les locations suivent un autre régime de prix, comp 1).
+- Les prédictions sont des **médianes conditionnelles** (`exp` de la moyenne du log) : elles sous-estiment la moyenne.
+- Un rechargement exige la même version majeure de scikit-learn et le paquet `kerdata` importable (classe `NormaliserAnnonce`).
+- La surface est refusée si absente : en production, l'annonce doit être complétée, comme à la quarantaine.
+
+## Performance
+
+{resultats_md(r)}"""
+    chemin = racine / "docs" / "pipeline.md"
+    chemin.write_text(p, encoding="utf-8")
+    return chemin
