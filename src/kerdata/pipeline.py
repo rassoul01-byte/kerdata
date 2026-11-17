@@ -101,4 +101,8 @@ def executer(racine: Path = Path("."), etapes_longues: bool = True) -> dict:
         res["comp8"] = comp8.main(racine)
         with open(sortie / "rapport_qualite.md", "a", encoding="utf-8") as fh:
             fh.write("\n" + comp8.markdown(res["comp8"], racine))
+        from . import modele                 # compétence 9 : pipeline final, 6 vérifications, évaluation unique sur le test
+        res["comp9"] = modele.main(racine, evaluer_test=True)
+        with open(sortie / "rapport_qualite.md", "a", encoding="utf-8") as fh:
+            fh.write("\n" + modele.markdown(res["comp9"]))
     return res

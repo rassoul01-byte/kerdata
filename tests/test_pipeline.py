@@ -94,3 +94,11 @@ def test_pipeline_complet_avec_comp6_dans_le_rapport(tmp_path_factory):
     assert "Jeu de test scellé" in t and (tmp / "sortie" / "test_scelle.json").exists()
     assert "Audit anti-fuite (compétence 8)" in t and "Preuve de détection" in t and "`statut` : exclu" in t
     assert res["comp8"]["fit"]["dont_val_ou_test"] == 0 and (tmp / "reports" / "comp8_audit_features.csv").exists()
+    # compétence 9 : pipeline sérialisé, 6 vérifications, évaluation finale unique
+    assert (tmp / "models" / "pipeline_preparation.joblib").exists() and (tmp / "docs").exists() is not None
+    assert "Pipeline reproductible (compétence 9)" in t and "Évaluation finale sur le test" in t
+    premiere = res["comp9"]["test"]
+    assert premiere["deja_realisee"] is False
+    from kerdata import modele
+    seconde = modele.main(tmp, evaluer_test=True)["test"]
+    assert seconde["deja_realisee"] is True and seconde["global_"] == premiere["global_"]        # relu, jamais recalculé

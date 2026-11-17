@@ -499,5 +499,6 @@ Le rechargement a été testé dans un interpréteur neuf : prédictions identiq
 
 {resultats_md(r)}"""
     chemin = racine / "docs" / "pipeline.md"
+    chemin.parent.mkdir(exist_ok=True)
     chemin.write_text(p, encoding="utf-8")
     return chemin
