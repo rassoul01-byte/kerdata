@@ -376,8 +376,11 @@ def main(racine: Path = Path("."), evaluer_test: bool = False) -> dict:
         t.to_csv(rep / f"comp9_verification_{k.replace('v6_colonnes', '6_colonnes').replace('v', '', 1) if k != 'v6_colonnes' else '6_colonnes'}.csv", index=False)
     grille.to_csv(rep / "comp9_choix_alpha_validation.csv", index=False)
     out = dict(alpha=alpha, grille=grille, val=val, baseline_val=base, verifs=v, modele=modele, jeux=jeux)
+    stocke = rep / "comp9_evaluation_finale.json"
     if evaluer_test:
         out["test"] = evaluation_finale_unique(racine, modele, jeux)
+    elif stocke.exists():                    # simple relecture du résultat déjà obtenu : aucun prix du test n'est lu
+        out["test"] = dict(json.loads(stocke.read_text(encoding="utf-8")), deja_realisee=True)
     ecrire_docs(out, racine)
     return out
 

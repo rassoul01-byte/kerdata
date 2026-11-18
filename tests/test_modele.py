@@ -95,3 +95,10 @@ def test_seules_deux_fonctions_lisent_le_jeu_de_test():
             if isinstance(n, ast.Subscript) and isinstance(n.slice, ast.Constant) and n.slice.value == "test" and getattr(n.value, "id", "") == "jeux":
                 lecteurs.add(f.name)
     assert lecteurs == {"verif4_serialisation", "evaluation_finale_unique"}
+
+
+def test_relancer_main_sans_evaluation_n_ecrase_pas_les_resultats_du_test(r):
+    doc = (RACINE / "docs" / "pipeline.md").read_text(encoding="utf-8")
+    if (RACINE / "reports" / "comp9_evaluation_finale.json").exists():
+        assert "réalisée une seule fois" in doc and "non réalisée à ce stade" not in doc
+        assert r["test"]["deja_realisee"] is True

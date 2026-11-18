@@ -169,7 +169,7 @@ les retirer tronquerait la queue de prix (skew 1.86 avec eux, 1.77 sans) et rend
 | ratio médiane villa / chambre | ×22.5 | ×22.7 |
 | corrélation prix ~ surface (global) | ρ = 0.43 | r = 0.43 |
 
-Les valeurs sont quasi identiques : le nettoyage n'a pas déformé les distributions. Les {x['n_ventes_retirees']} ventes retirées (quarantaine) ont toutes un prix valide : elles sont rejetées pour surface ou date inexploitable, ou comme doublons, pas pour des valeurs extrêmes.
+Les valeurs sont quasi identiques : le nettoyage n'a pas déformé les distributions. Les 74 ventes retirées (quarantaine) ont toutes un prix valide : elles sont rejetées pour surface ou date inexploitable, ou comme doublons, pas pour des valeurs extrêmes.
 
 ### Récapitulatif {figure, question, décision comp 3 justifiée}
 

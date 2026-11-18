@@ -220,7 +220,7 @@ def _comparaison_comp2(racine: Path, c: dict, x: dict) -> str:
         ("corrélation prix ~ surface (global)", f"ρ = {rg:.2f}", f"r = {c['v3']['r_global']:.2f}"),
     ]
     t = pd.DataFrame(lignes, columns=["Indicateur", "Comp 2 (données brutes)", "Comp 4 (données conservées)"])
-    return _md(t) + "\nLes valeurs sont quasi identiques : le nettoyage n'a pas déformé les distributions. Les {x['n_ventes_retirees']} ventes retirées (quarantaine) ont toutes un prix valide : elles sont rejetées pour surface ou date inexploitable, ou comme doublons, pas pour des valeurs extrêmes.\n"
+    return _md(t) + f"\nLes valeurs sont quasi identiques : le nettoyage n'a pas déformé les distributions. Les {x['n_ventes_retirees']} ventes retirées (quarantaine) ont toutes un prix valide : elles sont rejetées pour surface ou date inexploitable, ou comme doublons, pas pour des valeurs extrêmes.\n"
 
 
 def _md(df: pd.DataFrame) -> str:
