@@ -68,20 +68,5 @@ Le rechargement a été testé dans un interpréteur neuf : prédictions identiq
 
 Le pipeline gagne +0.016 de R² log sur la baseline, mais son erreur médiane relative (34.1 %) n'est pas meilleure que celle de la baseline (32.5 %) : la catégorie porte presque tout le signal (η² = 0,74), la région et la surface n'ajoutent presque rien (comp 2 et 6).
 
-**Évaluation finale sur le test (381 ventes), réalisée une seule fois le 2026-11-17** (le test n'a servi à aucune décision) :
-
-| modele | r2_log | rmse_log | mdape_pct | mae_fcfa |
-|---|---|---|---|---|
-| Ridge (pipeline final) | 0.731 | 0.484 | 35.9 | 38.5 M |
-| baseline : médiane de la catégorie | 0.713 | 0.5 | 34.1 | 39.0 M |
-
-Par source :
-
-| source | n | r2_log | mdape_pct |
-|---|---|---|---|
-| agence | 79 | 0.685 | 33.5 |
-| historique | 78 | 0.802 | 30.3 |
-| notaires | 58 | 0.756 | 37.6 |
-| particuliers | 65 | 0.663 | 40.0 |
-| plateforme | 101 | 0.711 | 37.4 |
+_Évaluation finale sur le test : non réalisée à ce stade._
 
