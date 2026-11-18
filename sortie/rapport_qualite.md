@@ -387,3 +387,103 @@ Un espion placé en tête du pipeline enregistre les lignes vues par `fit` : **1
 - **`source` : exclue** (type 4). Mesurée : gain -0.0015 (la fiche attendait +0,05 ou plus : pas d'artefact de prix observé), exclue quand même par principe.
 - **Colonnes mono-source** (`quartier`, `description`, `date_expiration`, `pieces`, `commercial`, `devise`) : retirées des 4 fichiers de sortie, conservées uniquement dans l'intermédiaire brut `corpus_brut_concatene.csv` pour la traçabilité.
 - **Limites reconnues :** 4 ventes datées de 2028 sont conservées en avertissement (leur date n'entre dans aucune feature) ; le seuil de 3 M FCFA qui sépare ventes et locations a été observé sur tout le corpus avant le split (règle métier fixe, pas un paramètre appris, mais choisie en voyant les données).
+
+## Pipeline reproductible (compétence 9)
+
+Objet livré : `models/pipeline_preparation.joblib` (voir `docs/pipeline.md`). Il prend une annonce au schéma commun (`categorie`, `region`, `surface`, valeurs brutes acceptées) et renvoie un prix de vente en FCFA.
+
+**Vérification 1 — ordre des étapes**
+
+| test | observation | verdict |
+|---|---|---|
+| encodage sans normalisation préalable (sur le train brut) | 15 modalités de catégorie au lieu de 7 et 17 de région au lieu de 14 : colonnes parasites (variantes de casse, mojibake) ; 0 lignes de validation tombent à zéro car les mêmes variantes existent déjà dans le train | fragmentation des modalités : normaliser AVANT d'encoder |
+| variante jamais vue « Appt » (synonyme d'Appartement) | sans normalisation : somme du one-hot de catégorie = 0 (annonce sans catégorie, silencieux) ; avec normalisation : 1 | la normalisation protège la production contre les variantes de saisie |
+| log1p + scaler sur la surface brute (texte) sans normalisation | plante : TypeError (surface en texte, virgule décimale) | convertir la surface AVANT de la transformer |
+| log1p puis scaler (ordre retenu) vs scaler puis log1p (inversé) | l'ordre inversé produit 0 NaN sur 1773 lignes ; écart médian absolu entre les deux = 0.027 | ne plante pas ici mais change les valeurs : on garde l'ordre standard (symétriser d'abord, centrer-réduire ensuite) |
+
+**Vérification 2 — fit sur le train seul** (paramètres appris vs train seul vs train + validation)
+
+| parametre | appris_par_le_pipeline | train_seul | train_plus_val | correspond_au_train |
+|---|---|---|---|---|
+| médiane de log1p(surface) (centre du RobustScaler) | 5.00193 | 5.00193 | 4.99451 | True |
+| IQR de log1p(surface) (échelle du RobustScaler) | 1.2295 | 1.2295 | 1.23306 | True |
+| modalités de catégorie apprises | 7 | 7 | 7 | True |
+| modalités de région apprises | 14 | 14 | 14 | True |
+| colonnes apprises par le Ridge (7 catégories + 14 régions + 1 surface) | 22 | 22 | 22 | True |
+
+**Vérification 3 — reproductibilité** (deux exécutions complètes : lecture, split, entraînement)
+
+| controle | exec_1 | exec_2 | identique |
+|---|---|---|---|
+| empreinte des coefficients (exécution 1 / 2) | 1bc3b7192d92c61e | 1bc3b7192d92c61e | True |
+| empreinte des prédictions de validation | f4e52970237eb708 | f4e52970237eb708 | True |
+| graine du split (comp 7) | 42 | 42 | True |
+
+**Vérification 4 — sérialisation** (rechargement dans un interpréteur neuf)
+
+| echantillon | n | ecart_maximal_fcfa | predictions_identiques |
+|---|---|---|---|
+| validation | 60 | 0.0 | True |
+| test (caractéristiques seules) | 60 | 0.0 | True |
+| fichier models/pipeline_preparation.joblib | 0 | 0.0 | True |
+
+**Vérification 5 — une ligne brute de chaque source** (schéma natif), cas limites
+
+| cas | entree | prediction_fcfa | ok |
+|---|---|---|---|
+| 1 ligne brute de agence | {'categorie': 'Studio', 'region': 'Fatick', 'surface': '35.7'} | 27218524 | True |
+| 1 ligne brute de historique | {'categorie': 'Studio', 'region': 'Thi�s', 'surface': '24.2'} | 27331226 | True |
+| 1 ligne brute de notaires | {'categorie': 'Villa', 'region': 'Sédhiou', 'surface': '392.1'} | 234541592 | True |
+| 1 ligne brute de particuliers | {'categorie': 'Studio', 'region': 'Fatick', 'surface': 50.0} | 27389961 | True |
+| 1 ligne brute de plateforme | {'categorie': 'Villa', 'region': 'Dakar', 'surface': '275.8'} | 318358404 | True |
+| modalités inconnues (handle_unknown=ignore) | {'categorie': 'Château', 'region': 'Atlantide', 'surface': '120'} | 57413987 | True |
+| une ligne seule == la même ligne dans un lot (aucun état collectif) | 25 lignes de validation | 0 | True |
+| surface invalide '' | Villa / Dakar | 0 | True |
+| surface invalide 'quatre-vingt' | Villa / Dakar | 0 | True |
+| surface invalide '-5' | Villa / Dakar | 0 | True |
+
+**Vérification 6 — cohérence multi-source** (validation)
+
+| source | n_val | r2_log | mdape_pct | categories_connues_pct | regions_connues_pct |
+|---|---|---|---|---|---|
+| agence | 79 | 0.701 | 31.5 | 100.0 | 100.0 |
+| historique | 77 | 0.75 | 35.3 | 100.0 | 100.0 |
+| notaires | 58 | 0.751 | 37.1 | 100.0 | 100.0 |
+| particuliers | 63 | 0.749 | 29.4 | 100.0 | 100.0 |
+| plateforme | 103 | 0.715 | 36.0 | 100.0 | 100.0 |
+
+| controle | valeur | ok |
+|---|---|---|
+| colonnes lues par le pipeline | categorie, region, surface | True |
+| `source` ou colonne mono-source utilisée | aucune | True |
+| modalités de catégorie / région couvertes pour les 5 sources | 100.0 % / 100.0 % minimum | True |
+| sources évaluées | agence, historique, notaires, particuliers, plateforme | True |
+
+### Performance
+
+**Validation (380 ventes)** : choix de l'hyperparamètre α = 1 (meilleur R² log sur la validation).
+
+| modele | r2_log | rmse_log | mdape_pct | mae_fcfa |
+|---|---|---|---|---|
+| Ridge (pipeline final) | 0.738 | 0.474 | 34.1 | 38.4 M |
+| baseline : médiane de la catégorie | 0.722 | 0.489 | 32.5 | 39.0 M |
+
+Le pipeline gagne +0.016 de R² log sur la baseline, mais son erreur médiane relative (34.1 %) n'est pas meilleure que celle de la baseline (32.5 %) : la catégorie porte presque tout le signal (η² = 0,74), la région et la surface n'ajoutent presque rien (comp 2 et 6).
+
+**Évaluation finale sur le test (381 ventes), réalisée une seule fois le 2026-11-17** (le test n'a servi à aucune décision) :
+
+| modele | r2_log | rmse_log | mdape_pct | mae_fcfa |
+|---|---|---|---|---|
+| Ridge (pipeline final) | 0.731 | 0.484 | 35.9 | 38.5 M |
+| baseline : médiane de la catégorie | 0.713 | 0.5 | 34.1 | 39.0 M |
+
+Par source :
+
+| source | n | r2_log | mdape_pct |
+|---|---|---|---|
+| agence | 79 | 0.685 | 33.5 |
+| historique | 78 | 0.802 | 30.3 |
+| notaires | 58 | 0.756 | 37.6 |
+| particuliers | 65 | 0.663 | 40.0 |
+| plateforme | 101 | 0.711 | 37.4 |
+
