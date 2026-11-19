@@ -40,6 +40,11 @@ def executer(racine: Path = Path("."), etapes_longues: bool = True) -> dict:
     controle_volumes(brut).to_csv(rep / "volumes_etape0.csv", index=False)
     brut.to_csv(sortie / "corpus_brut_concatene.csv", index=False, encoding="utf-8")
 
+    if etapes_longues:                       # compétences 1 et 2 : types, statistiques, EDA (lisent le corpus brut)
+        from . import comp1, comp2
+        comp1.main(racine)
+        comp2.main_d1_d2(racine); comp2.main_d3_d5(racine); comp2.main_d6(racine); comp2.main_d7_f(racine)
+
     res = nettoyer(brut, racine / "referentiels")
     d = res["d"].copy()
     d["prix"], d["surface"] = d["prix_num"], d["surface_num"]
@@ -105,4 +110,6 @@ def executer(racine: Path = Path("."), etapes_longues: bool = True) -> dict:
         res["comp9"] = modele.main(racine, evaluer_test=True)
         with open(sortie / "rapport_qualite.md", "a", encoding="utf-8") as fh:
             fh.write("\n" + modele.markdown(res["comp9"]))
+        from . import rapport_final          # rapport final en 7 sections, assemblé à partir des mesures
+        res["rapport_final"] = rapport_final.generer(racine)
     return res

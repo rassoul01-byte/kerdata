@@ -53,8 +53,10 @@ def generer(racine: Path) -> Path:
     struct = man[man.mecanisme.str.startswith("structurel")]
     tab = pd.read_csv(rep / "comp2_d7_tests_croises.csv")
     eta = tab.loc[tab.mesure_effet == "eta²", "effet"].iloc[0]
-    insights = (racine / "docs" / "insights_comp2.md").read_text(encoding="utf-8").split("\n", 2)[2].strip()
-    nb_dec = len(re.findall(r"(?m)^\| \d+\.\d+ \|", (racine / "docs" / "justifications.md").read_text(encoding="utf-8")))
+    f_ins = racine / "docs" / "insights_comp2.md"
+    insights = f_ins.read_text(encoding="utf-8").split("\n", 2)[2].strip() if f_ins.exists() else "_(voir `docs/insights_comp2.md`)_"
+    f_j = racine / "docs" / "justifications.md"
+    nb_dec = len(re.findall(r"(?m)^\| \d+\.\d+ \|", f_j.read_text(encoding="utf-8"))) if f_j.exists() else 0
     det = pd.read_csv(rep / "comp8_detectabilite_source.csv")
     scelle = json.loads((sortie / "test_scelle.json").read_text(encoding="utf-8"))
     r2_val = json.loads((racine / "models" / "pipeline_meta.json").read_text(encoding="utf-8"))["val"]["r2_log"]
@@ -144,6 +146,7 @@ Le total lu ({int(mes['n'])} lignes) est inférieur de 40 lignes à la fiche de 
 **Perspectives.** Enrichir les features intra-catégorie (état du bien, étage, quartier, distance à la mer) ; modèle de loyers séparé ; validation temporelle si de nouvelles années sont collectées.
 """
     chemin = racine / "docs" / "rapport_final.md"
+    chemin.parent.mkdir(exist_ok=True)
     chemin.write_text(p, encoding="utf-8")
     return chemin
 

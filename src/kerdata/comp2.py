@@ -244,7 +244,7 @@ def figures_d2(d: pd.DataFrame, v: pd.DataFrame, dossier: Path) -> None:
     # Fig 2 : prix par catégorie (ventes, échelle log)
     ordre = v.groupby("categorie_cle").prix_num.median().sort_values().index
     fig, ax = plt.subplots(figsize=(9, 5))
-    ax.boxplot([v[v.categorie_cle == c].prix_num / 1e6 for c in ordre], tick_labels=ordre, vert=True, showfliers=True)
+    ax.boxplot([v[v.categorie_cle == c].prix_num / 1e6 for c in ordre], tick_labels=ordre, showfliers=True)
     ax.set_yscale("log"); ax.set_ylabel("prix de vente (M FCFA, échelle log)"); ax.tick_params(axis="x", rotation=30)
     ax.set_title("Prix de vente par catégorie (brut, sans nettoyage)"); fig.tight_layout()
     fig.savefig(dossier / "comp2_prix_par_categorie.png", dpi=110); plt.close(fig)
@@ -448,7 +448,7 @@ def coherence_geographique(d: pd.DataFrame) -> pd.DataFrame:
 def main_d7_f(racine: Path = Path(".")) -> dict:
     d = preparer(charger_corpus(racine)); v = base_ventes(d); rep = racine / "reports"
     out = dict(croises=croiser_variables(d, v), aberrants=aberrants_diagnostic(d), geo=coherence_geographique(d))
-    out["croises"].to_csv(rep / "comp2_d7_croiser_variables.csv", index=False)
+    out["croises"].to_csv(rep / "comp2_d7_tests_croises.csv", index=False)
     out["aberrants"].to_csv(rep / "comp2_f_aberrants_vs_referentiel.csv", index=False)
     out["geo"].to_csv(rep / "comp2_f_coherence_geographique.csv", index=False)
     return out

@@ -100,5 +100,12 @@ def test_pipeline_complet_avec_comp6_dans_le_rapport(tmp_path_factory):
     premiere = res["comp9"]["test"]
     assert premiere["deja_realisee"] is False
     from kerdata import modele
+    # projet VIERGE (seulement sources/ et referentiels/) : comp 1 et 2 régénérées, rapport final complet
+    for f in ("comp1_types_par_source.csv", "comp1_prix_vs_log.csv", "comp2_d2_manquants.csv", "comp2_d6_robustesse.csv", "comp2_d7_tests_croises.csv"):
+        assert (tmp / "reports" / f).exists(), f
+    rf = (tmp / "docs" / "rapport_final.md").read_text(encoding="utf-8")
+    import re
+    assert [m for m in re.findall(r"(?m)^## (\d)\. ", rf)] == list("1234567")
+    assert rf.count("![") >= 10 and "Limites reconnues" in rf
     seconde = modele.main(tmp, evaluer_test=True)["test"]
     assert seconde["deja_realisee"] is True and seconde["global_"] == premiere["global_"]        # relu, jamais recalculé
