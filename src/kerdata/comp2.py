@@ -345,10 +345,12 @@ def figure_tendance(t: pd.DataFrame, dossier: Path) -> None:
     dossier.mkdir(parents=True, exist_ok=True)
     fig, ax = plt.subplots(1, 3, figsize=(16, 4.5))
     for s, g in t.groupby("source"):
+        n_annee = g.groupby("annee").size()
+        g = g[g.annee.isin(n_annee[n_annee >= 10].index)]          # une médiane sur < 10 ventes n'a pas de sens statistique
         ax[0].plot(g.groupby("annee").prix_num.median() / 1e6, marker="o", label=s)
         ax[1].plot(g.groupby("annee").prix_std.median(), marker="o", label=s)
-    ax[0].set(title="Prix médian de vente par année (brut)", ylabel="M FCFA", xlabel="année"); ax[0].legend(fontsize=8)
-    ax[1].set(title="Prix standardisé par catégorie (médiane)", xlabel="année"); ax[1].axhline(1, color="grey", lw=.8)
+    ax[0].set(title="Prix médian de vente par année (brut)\n(années avec ≥ 10 ventes)", ylabel="M FCFA", xlabel="année"); ax[0].legend(fontsize=8)
+    ax[1].set(title="Prix standardisé par catégorie (médiane)\n(années avec ≥ 10 ventes)", xlabel="année"); ax[1].axhline(1, color="grey", lw=.8)
     eff = trous_et_pics(t); eff.plot(kind="bar", stacked=True, ax=ax[2], width=.85)
     ax[2].set(title="Ventes datées par année et source", xlabel="année", ylabel="annonces"); ax[2].legend(fontsize=7)
     fig.tight_layout(); fig.savefig(dossier / "comp2_tendance_temporelle.png", dpi=110); plt.close(fig)
