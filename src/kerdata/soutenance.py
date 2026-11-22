@@ -81,8 +81,8 @@ def _faits(racine: Path) -> dict:
     F["formes"] = int(geo[geo.mesure.str.contains("formes cassées récupérables")].valeur.sum())
     ins = (racine / "docs" / "insights_comp2.md").read_text(encoding="utf-8") if (racine / "docs" / "insights_comp2.md").exists() else ""
     F["n_insights"] = len(re.findall(r"(?m)^\d+\. ", ins))
-    jus = (racine / "docs" / "justifications.md").read_text(encoding="utf-8")
-    F["n_decisions"] = len(re.findall(r"(?m)^\| \d+\.\d+ \|", jus))
+    f_jus = racine / "docs" / "justifications.md"
+    F["n_decisions"] = len(re.findall(r"(?m)^\| \d+\.\d+ \|", f_jus.read_text(encoding="utf-8"))) if f_jus.exists() else 0
     F["motifs"] = q.motifs_q.str.split("; ").explode().str.replace(r" de plateforme:\d+", "", regex=True).value_counts()
     return F
 

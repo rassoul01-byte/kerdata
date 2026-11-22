@@ -112,4 +112,8 @@ def executer(racine: Path = Path("."), etapes_longues: bool = True) -> dict:
             fh.write("\n" + modele.markdown(res["comp9"]))
         from . import rapport_final          # rapport final en 7 sections, assemblé à partir des mesures
         res["rapport_final"] = rapport_final.generer(racine)
+        from . import soutenance, grille     # compétences 10 et 11 : support de soutenance, auto-évaluation vérifiée par le code
+        res["soutenance"] = soutenance.generer(racine)
+        if grille.disponible(racine):        # seulement dans le dépôt livré (registre, notebook et manifeste présents)
+            res["grille"] = grille.main(racine)
     return res
